@@ -12,10 +12,6 @@
   "browser_action": {
     "default_popup": "popup.html"
   },
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
   "action": {
     "default_title": "Resumogpt",
     "default_popup": "popup.html"
