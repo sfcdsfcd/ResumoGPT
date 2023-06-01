@@ -1,3 +1,5 @@
+import './popup.css'
+
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   var pageTitle = message.title;
   console.log(pageTitle);
