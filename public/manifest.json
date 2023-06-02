@@ -14,7 +14,9 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "tabs",
+    "contextMenus"
   ],
   "content_scripts": [
     {
