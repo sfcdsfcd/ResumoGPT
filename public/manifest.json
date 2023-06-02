@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Resumogpt",
   "version": "0.1.0",
   "description": "My Chrome Extension",
@@ -9,16 +9,12 @@
     "48": "icons/icon_48.png",
     "128": "icons/icon_128.png"
   },
-  "browser_action": {
-    "default_popup": "popup.html"
-  },
   "action": {
     "default_title": "Resumogpt",
     "default_popup": "popup.html"
   },
   "permissions": [
-    "activeTab",
-    "runtime"
+    "activeTab"
   ],
   "content_scripts": [
     {
