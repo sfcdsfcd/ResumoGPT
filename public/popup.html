@@ -8,9 +8,17 @@
     <link rel="stylesheet" href="popup.css">
   </head>
   <body>
-    <h1>Bem-vindo Ao ResumoGpt</h1>
-    <button id="myButton">Clique aqui</button>
-    <p id="pageTitle">Nada ainda</p>
-    <p id="summary"></p>
+    <div id="login-container" style="display:none">
+      <h1>Login</h1>
+      <input type="password" id="tokenInput" placeholder="API Token" />
+      <button id="loginButton">Entrar</button>
+    </div>
+    <div id="app" style="display:none">
+      <h1>Bem-vindo Ao ResumoGpt</h1>
+      <button id="myButton">Clique aqui</button>
+      <p id="pageTitle">Nada ainda</p>
+      <p id="summary"></p>
+      <button id="logoutButton">Sair</button>
+    </div>
   </body>
 </html>
