@@ -35,6 +35,12 @@ async function summarize(text: string) {
       const resumo = data.choices?.[0]?.message?.content || 'Erro ao resumir.';
       if (summaryEl) summaryEl.textContent = resumo;
     });
+    if (!response.ok) {
+      const errorMessage = `Erro na API: ${response.status} ${response.statusText}`;
+      console.error(errorMessage);
+      if (summaryEl) summaryEl.textContent = 'Erro ao conectar à API.';
+      return;
+    }
   } catch (err) {
     console.error(err);
     if (summaryEl) summaryEl.textContent = 'Erro ao conectar à API.';
