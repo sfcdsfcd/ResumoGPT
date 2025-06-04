@@ -8,27 +8,33 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.onClicked.addListener(teste);
 
-const API_TOKEN = 'YOUR_OPENAI_API_KEY';
-
 async function summarize(text: string) {
   const summaryEl = document.getElementById('summary');
   if (!text) return;
   if (summaryEl) summaryEl.textContent = 'Resumindo...';
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_TOKEN}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: `Resuma o seguinte texto:\n\n${text}` }],
-      }),
+    chrome.storage.local.get(['API_TOKEN'], async function(result) {
+      const API_TOKEN = result.API_TOKEN;
+      if (!API_TOKEN) {
+        console.error('API token not found in storage.');
+        if (summaryEl) summaryEl.textContent = 'Erro: API token não encontrado.';
+        return;
+      }
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${API_TOKEN}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [{ role: 'user', content: `Resuma o seguinte texto:\n\n${text}` }],
+        }),
+      });
+      const data = await response.json();
+      const resumo = data.choices?.[0]?.message?.content || 'Erro ao resumir.';
+      if (summaryEl) summaryEl.textContent = resumo;
     });
-    const data = await response.json();
-    const resumo = data.choices?.[0]?.message?.content || 'Erro ao resumir.';
-    if (summaryEl) summaryEl.textContent = resumo;
   } catch (err) {
     console.error(err);
     if (summaryEl) summaryEl.textContent = 'Erro ao conectar à API.';
