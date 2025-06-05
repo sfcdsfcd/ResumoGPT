@@ -109,6 +109,42 @@ async function start() {
     }
   });
 
+  app.post('/summarize', authMiddleware, async (req, res) => {
+    const { text } = req.body;
+    if (!text) {
+      return res.status(400).json({ error: 'text required' });
+    }
+    try {
+      const user = await User.findByPk(req.userId);
+      if (!user || !user.api_key) {
+        return res.status(400).json({ error: 'API key not configured' });
+      }
+
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.api_key}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [{ role: 'user', content: `Resuma o seguinte texto:\n\n${text}` }]
+        })
+      });
+      if (!response.ok) {
+        const t = await response.text();
+        console.error('OpenAI error', response.status, t);
+        return res.status(500).json({ error: 'openai failed' });
+      }
+      const data = await response.json();
+      const summary = data.choices?.[0]?.message?.content || '';
+      res.json({ summary });
+    } catch (err) {
+      console.error('summarize failed', err);
+      res.status(500).json({ error: 'summarize failed' });
+    }
+  });
+
   const PORT = process.env.PORT || 3000
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)

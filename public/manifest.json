@@ -19,7 +19,9 @@
   },
   "permissions": [
     "contextMenus",
-    "storage"
+    "storage",
+    "activeTab",
+    "scripting"
   ],
   "host_permissions": [
     "https://api.openai.com/*",
@@ -31,7 +33,8 @@
         "popup.html",
         "popup.js",
         "dashboard.html",
-        "dashboard.js"
+        "dashboard.js",
+        "contentScript.js"
       ],
       "matches": ["<all_urls>"]
     }
