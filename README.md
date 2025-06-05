@@ -1,21 +1,21 @@
-# <img src="public/icons/icon_48.png" width="45" align="left"> Resumogpt
+# ResumoGPT
 
-My Chrome Extension
+ResumoGPT is a Chrome extension that uses OpenAI's GPT API to summarize text from the current page. Select text and use the context menu or the popup to generate a concise summary.
 
-## Features
+## Usage
 
-- Feature 1
-- Feature 2
+1. Run `npm install` to install dependencies.
+2. Execute `npm run watch` to build the extension in watch mode.
+3. Open `chrome://extensions`, enable **Developer mode** and choose **Load unpacked**.
+4. Select the `build` directory to load the extension.
+5. When prompted, provide your OpenAI API token in the popup.
 
-## Install
+## Build
 
-[**Chrome** extension]()
+To create a production build run:
 
-## Contribution
+```bash
+npm run build
+```
 
-Suggestions and pull requests are welcomed!.
-
----
-
-This project was bootstrapped with [Chrome Extension CLI](https://github.com/dutiyesh/chrome-extension-cli)
-
+The bundled files will be output to the `build` folder.
