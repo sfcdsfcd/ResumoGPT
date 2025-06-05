@@ -42,6 +42,7 @@ export default defineConfig({
       input: {
         ...htmlInputs,
         background: resolve(__dirname, 'src/background/index.ts'),
+        contentScript: resolve(__dirname, 'src/contentScript.ts'),
       },
       output: {
         entryFileNames: '[name].js',
