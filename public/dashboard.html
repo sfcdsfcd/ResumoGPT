@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8" />
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>Dashboard</h1>
-  <div id="info"></div>
-  <input id="api-key" type="text" placeholder="API Key">
-  <button id="save-api-key">Salvar API Key</button>
-  <div id="api-message"></div>
-  <button id="logout">Logout</button>
-  <script src="config.js"></script>
-  <script src="dashboard.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/dashboard/main.ts"></script>
+  </body>
 </html>
