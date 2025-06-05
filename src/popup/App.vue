@@ -46,6 +46,7 @@ function toggleForm() {
 
 function openDashboard() {
   chrome.tabs.create({ url: chrome.runtime.getURL('dashboard.html') })
+  window.close()
 }
 
 function login() {
