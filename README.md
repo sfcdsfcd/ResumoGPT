@@ -37,3 +37,4 @@ The API exposes the following endpoints:
 - `GET /me` – return the authenticated user (requires `Authorization: Bearer <token>` header).
 
 Sequelize manages the PostgreSQL schema and creates the required tables when the server starts.
+The server waits for this initialization to finish before it begins accepting requests.
