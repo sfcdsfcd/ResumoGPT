@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginBtn = document.getElementById('login-btn');
   const registerBtn = document.getElementById('register-btn');
   const messageEl = document.getElementById('message');
+  const loginDiv = document.getElementById('login');
+  const registerDiv = document.getElementById('register');
+  const showRegisterLink = document.getElementById('show-register');
+  const backToLoginLink = document.getElementById('back-to-login');
 
   // API base URL provided by config.js
   const { API_BASE_URL } = window;
@@ -11,6 +15,22 @@ document.addEventListener('DOMContentLoaded', () => {
     messageEl.textContent = msg;
     messageEl.className = success ? 'success' : 'error';
   }
+
+  showRegisterLink?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (loginDiv && registerDiv) {
+      loginDiv.style.display = 'none';
+      registerDiv.style.display = 'block';
+    }
+  });
+
+  backToLoginLink?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (loginDiv && registerDiv) {
+      registerDiv.style.display = 'none';
+      loginDiv.style.display = 'block';
+    }
+  });
 
   loginBtn?.addEventListener('click', () => {
     const email = document.getElementById('login-email').value;
