@@ -1,8 +1,9 @@
-# dependencies
-/node_modules
-
-# production
-/build
+# Ignorar arquivos de ambiente e dados sensíveis
+.env
+postgres-data/
+node_modules/
+build/
+*.log
 
 # misc
 .DS_Store
