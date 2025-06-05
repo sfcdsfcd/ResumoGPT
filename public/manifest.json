@@ -24,6 +24,17 @@
   "host_permissions": [
     "https://api.openai.com/*",
     "http://localhost:3000/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "popup.html",
+        "popup.js",
+        "dashboard.html",
+        "dashboard.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
   ]
 }
 
