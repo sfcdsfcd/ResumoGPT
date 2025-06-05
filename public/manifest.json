@@ -23,12 +23,6 @@
   },
   "host_permissions": [
     "https://api.openai.com/*"
-  ],
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["contentScript.js"]
-    }
   ]
 }
 
