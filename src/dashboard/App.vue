@@ -1,10 +1,18 @@
 <template>
-  <h1>Dashboard</h1>
-  <div id="info">{{ info }}</div>
-  <input v-model="apiKey" id="api-key" type="text" placeholder="API Key" />
-  <button id="save-api-key" @click="saveApiKey">Salvar API Key</button>
-  <div id="api-message" class="success" v-if="apiMessage">{{ apiMessage }}</div>
-  <button id="logout" @click="logout">Logout</button>
+  <!-- BootstrapVue components unify the styling of inputs and buttons -->
+  <!-- BCard groups dashboard actions for a cleaner layout -->
+  <b-card>
+    <h1>Dashboard</h1>
+    <div id="info">{{ info }}</div>
+    <b-form-input v-model="apiKey" id="api-key" type="text" placeholder="API Key" class="mb-3" />
+    <!-- Actions aligned with Bootstrap utility classes -->
+    <div class="d-flex justify-content-between mb-3">
+      <!-- Variant colors draw attention to primary and destructive actions -->
+      <b-button id="save-api-key" variant="primary" @click="saveApiKey">Salvar API Key</b-button>
+      <b-button id="logout" variant="danger" @click="logout">Logout</b-button>
+    </div>
+    <div id="api-message" class="success" v-if="apiMessage">{{ apiMessage }}</div>
+  </b-card>
 </template>
 
 <script setup lang="ts">
