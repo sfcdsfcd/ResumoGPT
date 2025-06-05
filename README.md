@@ -36,4 +36,5 @@ The API exposes the following endpoints:
 - `POST /login` – authenticate and receive a JWT token.
 - `GET /me` – return the authenticated user (requires `Authorization: Bearer <token>` header).
 
-The PostgreSQL schema is defined in `server/schema.sql` and automatically applied on startup.
+Sequelize manages the PostgreSQL schema and creates the required tables when the server starts.
+The server waits for this initialization to finish before it begins accepting requests.
