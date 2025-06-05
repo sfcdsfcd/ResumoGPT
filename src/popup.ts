@@ -89,5 +89,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Additional popup logic can be added here
+  
 });
