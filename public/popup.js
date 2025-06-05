@@ -3,9 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const registerBtn = document.getElementById('register-btn');
   const messageEl = document.getElementById('message');
 
-  // Determine API base URL depending on environment
-  const isDev = !('update_url' in chrome.runtime.getManifest());
-  const API_BASE_URL = isDev ? 'http://localhost:3000' : 'https://your-production-url.com';
+  // API base URL provided by config.js
+  const { API_BASE_URL } = window;
 
   function showMessage(msg, success=false) {
     if (!messageEl) return;
