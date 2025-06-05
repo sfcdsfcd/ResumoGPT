@@ -1,14 +1,12 @@
-async function getApiBaseUrl(): Promise<string> {
-  const { API_BASE_URL } = await chrome.storage.local.get('API_BASE_URL');
-  if (API_BASE_URL) return API_BASE_URL as string;
-  const isDevelopment = !('update_url' in chrome.runtime.getManifest());
-  return isDevelopment ? 'http://localhost:3000' : 'https://your-production-url.com';
-}
+const isDevelopment = !('update_url' in chrome.runtime.getManifest());
+const API_BASE_URL = isDevelopment
+  ? 'http://localhost:3000'
+  : 'https://your-production-url.com';
+
 
 async function summarize(text: string): Promise<string> {
   try {
-    const baseUrl = await getApiBaseUrl();
-    const response = await fetch(`${baseUrl}/resumir`, {
+    const response = await fetch(`${API_BASE_URL}/resumir`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text })
