@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: resumo
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: resumodb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  api:
+    build: ./server
+    restart: always
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: resumo
+      DB_PASSWORD: secret
+      DB_NAME: resumodb
+      JWT_SECRET: example_jwt_secret
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+volumes:
+  postgres-data:
