@@ -17,7 +17,6 @@ export default defineConfig({
       closeBundle() {
         copyFileSync('public/manifest.json', 'build/manifest.json');
         cpSync('public/icons', 'build/icons', { recursive: true });
-        copyFileSync('public/style.css', 'build/style.css');
         copyFileSync('public/config.js', 'build/config.js');
         // move processed html from public directory to build root
         copyFileSync('build/public/popup.html', 'build/popup.html');
