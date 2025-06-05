@@ -1,6 +1,6 @@
 # ResumoGPT
 
-ResumoGPT is a Chrome extension that uses OpenAI's GPT API to summarize text from the current page. Select text and use the context menu or the popup to generate a concise summary.
+ResumoGPT is a Chrome extension that uses OpenAI's GPT API to summarize selected text. Right click a selection and choose **Resumir seleção via GPT**, then open the popup to read the summary.
 
 ## Usage
 
