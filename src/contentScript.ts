@@ -61,20 +61,26 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       return;
     }
     const text = collectText();
-    fetch(`${msg.baseUrl}/summarize`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text })
-    })
-      .then(r => r.json())
-      .then(data => {
-        const summary = data.summary || data.error || 'Falha ao resumir.';
-        box.content.textContent = summary;
-        chrome.storage.local.set({ PAGE_SUMMARY: summary });
+    chrome.storage.local.get('JWT_TOKEN', data => {
+      const token = data.JWT_TOKEN;
+      fetch(`${msg.baseUrl}/summarize`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ text })
       })
-      .catch(() => {
-        box.content.textContent = 'Erro ao conectar à API.';
-      });
+        .then(r => r.json())
+        .then(data => {
+          const summary = data.summary || data.error || 'Falha ao resumir.';
+          box.content.textContent = summary;
+          chrome.storage.local.set({ PAGE_SUMMARY: summary });
+        })
+        .catch(() => {
+          box.content.textContent = 'Erro ao conectar à API.';
+        });
+    });
     sendResponse?.({status: 'started'});
   }
 });

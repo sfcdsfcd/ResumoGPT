@@ -109,17 +109,22 @@ async function start() {
     }
   });
 
-  app.post('/summarize', async (req, res) => {
+  app.post('/summarize', authMiddleware, async (req, res) => {
     const { text } = req.body;
     if (!text) {
       return res.status(400).json({ error: 'text required' });
     }
     try {
+      const user = await User.findByPk(req.userId);
+      if (!user || !user.api_key) {
+        return res.status(400).json({ error: 'API key not configured' });
+      }
+
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+          'Authorization': `Bearer ${user.api_key}`
         },
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
