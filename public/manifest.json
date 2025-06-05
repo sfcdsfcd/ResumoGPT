@@ -11,12 +11,15 @@
   },
   "action": {
     "default_title": "Resumogpt",
-    "default_popup": "popup.html"
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
   },
   "permissions": [
-    "activeTab",
-    "tabs",
-    "contextMenus"
+    "contextMenus",
+    "storage"
   ],
   "host_permissions": [
     "https://api.openai.com/*"
