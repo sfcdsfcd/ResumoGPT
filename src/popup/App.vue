@@ -6,6 +6,7 @@
     <input v-model="loginPassword" type="password" placeholder="Password" />
     <button @click="login">Login</button>
     <button @click="toggleForm">Cadastre-se</button>
+    <button v-if="loginSuccess" @click="openDashboard">Abrir Dashboard</button>
   </div>
   <div v-else>
     <h1>Register</h1>
@@ -31,6 +32,7 @@ const registerPassword = ref('')
 const message = ref('')
 const messageType = ref('')
 const isLogin = ref(true)
+const loginSuccess = ref(false)
 const router = useRouter()
 
 function showMessage(msg: string, success = false) {
@@ -40,6 +42,11 @@ function showMessage(msg: string, success = false) {
 
 function toggleForm() {
   isLogin.value = !isLogin.value
+}
+
+function openDashboard() {
+  chrome.tabs.create({ url: chrome.runtime.getURL('dashboard.html') })
+  window.close()
 }
 
 function login() {
@@ -57,9 +64,7 @@ function login() {
       if (data.token) {
         chrome.storage.local.set({ JWT_TOKEN: data.token }, () => {
           showMessage('Login successful', true)
-          setTimeout(() => {
-            router.push('/dashboard.html')
-          }, 500)
+          loginSuccess.value = true
         })
       } else {
         showMessage(data.error || 'Login failed')
