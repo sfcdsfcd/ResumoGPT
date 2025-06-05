@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const registerBtn = document.getElementById('register-btn');
   const messageEl = document.getElementById('message');
 
+  // API base URL provided by config.js
+  const { API_BASE_URL } = window;
+
   function showMessage(msg, success=false) {
     if (!messageEl) return;
     messageEl.textContent = msg;
@@ -13,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
-    fetch('/login', {
+    fetch(`${API_BASE_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       mode: 'cors',
@@ -40,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
 
-    fetch('/register', {
+    fetch(`${API_BASE_URL}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       mode: 'cors',
