@@ -5,20 +5,29 @@ ResumoGPT is a Chrome extension that uses OpenAI's GPT API to summarize selected
 ## Usage
 
 1. Run `npm install` to install dependencies.
-2. Execute `npm run watch` to build the extension in watch mode.
+2. Execute `npm run dev` to start Vite in watch mode.
 3. Open `chrome://extensions`, enable **Developer mode** and choose **Load unpacked**.
 4. Select the `build` directory to load the extension.
 5. When prompted, provide your OpenAI API token in the popup.
 
 ## Build
 
-To create a production build run:
+To create a production build with Vite run:
 
 ```bash
 npm run build
 ```
 
 The bundled files will be output to the `build` folder.
+
+## Directory structure
+
+```
+src/
+├── popup/       # extension popup UI
+├── dashboard/   # dashboard page
+└── background/  # background script
+```
 
 ## Backend API
 
