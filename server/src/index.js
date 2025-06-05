@@ -90,6 +90,25 @@ async function start() {
     }
   })
 
+  app.post('/me/api-key', authMiddleware, async (req, res) => {
+    const { apiKey } = req.body;
+    if (!apiKey) {
+      return res.status(400).json({ error: 'apiKey required' });
+    }
+    try {
+      const user = await User.findByPk(req.userId);
+      if (!user) {
+        return res.status(404).json({ error: 'user not found' });
+      }
+      user.api_key = apiKey;
+      await user.save();
+      res.json({ message: 'API Key updated' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'failed to update API Key' });
+    }
+  });
+
   const PORT = process.env.PORT || 3000
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
