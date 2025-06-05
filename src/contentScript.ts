@@ -27,7 +27,7 @@ function collectText(): string {
   return text;
 }
 
-function createSidebar() {
+function createSidebar(initialText = 'Gerando resumo...') {
   if ((window as any)[injectedFlag]) return null;
   (window as any)[injectedFlag] = true;
   const style = document.createElement('style');
@@ -37,7 +37,7 @@ function createSidebar() {
   const bar = document.createElement('div');
   bar.id = 'resumogpt-sidebar';
   const header = document.createElement('header');
-  header.textContent = 'Resumo da Página';
+  header.textContent = 'Resumo via GPT';
   const close = document.createElement('button');
   close.id = 'resumogpt-close';
   close.textContent = '\u00D7';
@@ -48,7 +48,7 @@ function createSidebar() {
   header.appendChild(close);
   const content = document.createElement('div');
   content.className = 'content';
-  content.textContent = 'Gerando resumo...';
+  content.textContent = initialText;
   bar.appendChild(header);
   bar.appendChild(content);
   document.body.appendChild(bar);
@@ -85,5 +85,15 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         });
     });
     sendResponse?.({status: 'started'});
+    return;
+  }
+
+  if (msg.action === 'SHOW_SUMMARY' && typeof msg.summary === 'string') {
+    const box = createSidebar(msg.summary);
+    if (!box) {
+      const existing = document.querySelector<HTMLDivElement>('#resumogpt-sidebar .content');
+      if (existing) existing.textContent = msg.summary;
+    }
+    sendResponse?.({status: 'shown'});
   }
 });
