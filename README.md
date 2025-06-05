@@ -19,3 +19,21 @@ npm run build
 ```
 
 The bundled files will be output to the `build` folder.
+
+## Backend API
+
+A simple Express API with PostgreSQL is provided in the `server/` directory. Use `docker-compose` to start both the database and the API:
+
+```bash
+docker-compose up --build
+```
+
+Environment variables can be configured by copying `server/.env.example` to `server/.env` and adjusting the values.
+
+The API exposes the following endpoints:
+
+- `POST /register` – create a new user with hashed password.
+- `POST /login` – authenticate and receive a JWT token.
+- `GET /me` – return the authenticated user (requires `Authorization: Bearer <token>` header).
+
+The PostgreSQL schema is defined in `server/schema.sql` and automatically applied on startup.
