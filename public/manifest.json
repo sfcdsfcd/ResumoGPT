@@ -11,7 +11,7 @@
   },
   "action": {
     "default_title": "Resumogpt",
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js",
