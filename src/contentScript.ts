@@ -1,4 +1,5 @@
 const injectedFlag = '__resumogpt_sidebar_injected';
+const listenerFlag = '__resumogpt_listener_registered';
 
 function collectText(): string {
   const unwanted = ['script','style','noscript','header','nav','footer','code','pre','form'];
@@ -56,7 +57,14 @@ function createSidebar(initialText = 'Gerando resumo...') {
   return { bar, content };
 }
 
-chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+if (!(window as any)[listenerFlag]) {
+  (window as any)[listenerFlag] = true;
+
+  chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+    if (msg.action === 'PING') {
+      sendResponse?.({ status: 'pong' });
+      return;
+    }
   if (msg.action === 'SUMMARIZE_PAGE' && msg.baseUrl) {
     const box = createSidebar();
     if (!box) {
@@ -96,4 +104,5 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     }
     sendResponse?.({status: 'shown'});
   }
-});
+  });
+}
