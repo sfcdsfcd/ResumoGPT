@@ -1,13 +1,5 @@
 import './popup.css'
 
-chrome.contextMenus.create({
-  title: 'Pad é frango',
-  contexts: ['all'],
-  id: '1',
-});
-
-chrome.contextMenus.onClicked.addListener(teste);
-
 async function summarize(text: string) {
   const summaryEl = document.getElementById('summary');
   if (!text) return;
@@ -47,11 +39,6 @@ async function summarize(text: string) {
   }
 }
 
-function teste(data, tab) {
-  const page = document.getElementById('pageTitle');
-  page.textContent = data.selectionText || '';
-  summarize(data.selectionText || '');
-}
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   const pageTitle = message.title;
@@ -102,12 +89,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  const button = document.getElementById('myButton');
-  button?.addEventListener('click', function () {
-    alert('Botão clicado!');
-  });
-
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, { action: 'getTitle' });
-  });
+  
 });
