@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 const API_BASE_URL = (window as any).API_BASE_URL
 
 const loginEmail = ref('')
@@ -30,6 +31,7 @@ const registerPassword = ref('')
 const message = ref('')
 const messageType = ref('')
 const isLogin = ref(true)
+const router = useRouter()
 
 function showMessage(msg: string, success = false) {
   message.value = msg
@@ -56,7 +58,7 @@ function login() {
         chrome.storage.local.set({ JWT_TOKEN: data.token }, () => {
           showMessage('Login successful', true)
           setTimeout(() => {
-            window.location.href = 'dashboard.html'
+            router.push('/dashboard.html')
           }, 500)
         })
       } else {
@@ -83,7 +85,7 @@ function register() {
         chrome.storage.local.set({ JWT_TOKEN: data.token }, () => {
           showMessage('Registered', true)
           setTimeout(() => {
-            window.location.href = 'dashboard.html'
+            router.push('/dashboard.html')
           }, 500)
         })
       } else if (data.message) {

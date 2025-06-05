@@ -9,15 +9,17 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 const info = ref('')
 const apiKey = ref('')
 const apiMessage = ref('')
+const router = useRouter()
 
 onMounted(() => {
   chrome.storage.local.get('JWT_TOKEN', data => {
     if (!data.JWT_TOKEN) {
-      window.location.href = 'popup.html'
+      router.push('/popup.html')
     } else {
       info.value = 'Logged in'
     }
@@ -32,7 +34,7 @@ onMounted(() => {
 
 function logout() {
   chrome.storage.local.remove('JWT_TOKEN', () => {
-    window.location.href = 'popup.html'
+    router.push('/popup.html')
   })
 }
 
