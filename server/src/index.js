@@ -2,33 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { Pool } = require('pg');
+const { initDb } = require('./db');
+const User = require('./models/user');
 
 const app = express();
 app.use(express.json());
 
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
-
-async function init() {
-  await pool.query(`CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(100) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
-    api_key TEXT
-  );`);
-}
-
-init().catch(err => {
-  console.error('Failed to init DB', err);
-  process.exit(1);
-});
+initDb();
 
 app.post('/register', async (req, res) => {
   const { username, email, password, apiKey } = req.body;
@@ -37,10 +17,7 @@ app.post('/register', async (req, res) => {
   }
   try {
     const hash = await bcrypt.hash(password, 10);
-    await pool.query(
-      'INSERT INTO users (username, email, password_hash, api_key) VALUES ($1, $2, $3, $4)',
-      [username, email, hash, apiKey || null]
-    );
+    await User.create({ username, email, password_hash: hash, api_key: apiKey || null });
     res.status(201).json({ message: 'user created' });
   } catch (err) {
     console.error(err);
@@ -54,8 +31,7 @@ app.post('/login', async (req, res) => {
     return res.status(400).json({ error: 'email and password required' });
   }
   try {
-    const { rows } = await pool.query('SELECT * FROM users WHERE email=$1', [email]);
-    const user = rows[0];
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(401).json({ error: 'invalid credentials' });
     }
@@ -88,8 +64,7 @@ function authMiddleware(req, res, next) {
 
 app.get('/me', authMiddleware, async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT username, email, api_key FROM users WHERE id=$1', [req.userId]);
-    const user = rows[0];
+    const user = await User.findByPk(req.userId, { attributes: ['username', 'email', 'api_key'] });
     if (!user) {
       return res.status(404).json({ error: 'user not found' });
     }
