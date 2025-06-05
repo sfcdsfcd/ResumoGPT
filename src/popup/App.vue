@@ -1,21 +1,29 @@
 <template>
+  <!-- BootstrapVue inputs and buttons provide consistent styling and better accessibility -->
   <div id="message" :class="messageType" v-if="message">{{ message }}</div>
-  <div v-if="isLogin">
+  <!-- Using a BCard groups related fields with consistent padding and a subtle shadow, improving focus -->
+  <b-card v-if="isLogin" class="mb-3">
     <h1>Login</h1>
-    <input v-model="loginEmail" type="email" placeholder="Email" />
-    <input v-model="loginPassword" type="password" placeholder="Password" />
-    <button @click="login">Login</button>
-    <button @click="toggleForm">Cadastre-se</button>
-    <button v-if="loginSuccess" @click="openDashboard">Abrir Dashboard</button>
-  </div>
-  <div v-else>
+    <b-form-input v-model="loginEmail" type="email" placeholder="Email" class="mb-3" />
+    <b-form-input v-model="loginPassword" type="password" placeholder="Password" class="mb-3" />
+    <!-- Utility classes keep actions aligned and spaced -->
+    <div class="d-flex justify-content-between mb-3">
+      <b-button variant="primary" @click="login">Login</b-button>
+      <b-button variant="secondary" @click="toggleForm">Cadastre-se</b-button>
+    </div>
+    <b-button v-if="loginSuccess" variant="success" @click="openDashboard">Abrir Dashboard</b-button>
+  </b-card>
+  <b-card v-else class="mb-3">
     <h1>Register</h1>
-    <input v-model="registerUsername" type="text" placeholder="Username" />
-    <input v-model="registerEmail" type="email" placeholder="Email" />
-    <input v-model="registerPassword" type="password" placeholder="Password" />
-    <button @click="register">Register</button>
-    <button @click="toggleForm">Voltar ao login</button>
-  </div>
+    <b-form-input v-model="registerUsername" type="text" placeholder="Username" class="mb-3" />
+    <b-form-input v-model="registerEmail" type="email" placeholder="Email" class="mb-3" />
+    <b-form-input v-model="registerPassword" type="password" placeholder="Password" class="mb-3" />
+    <!-- Buttons share space evenly on small screens -->
+    <div class="d-flex justify-content-between">
+      <b-button variant="primary" @click="register">Register</b-button>
+      <b-button variant="secondary" @click="toggleForm">Voltar ao login</b-button>
+    </div>
+  </b-card>
 </template>
 
 <script setup lang="ts">
