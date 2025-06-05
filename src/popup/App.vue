@@ -21,7 +21,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-const API_BASE_URL = (window as any).API_BASE_URL
+const isDevelopment = !('update_url' in chrome.runtime.getManifest())
+const API_BASE_URL =
+  (window as any).API_BASE_URL ||
+  (isDevelopment ? 'http://localhost:3000' : 'https://your-production-url.com')
 
 const loginEmail = ref('')
 const loginPassword = ref('')
