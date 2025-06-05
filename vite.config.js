@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
-import { copyFileSync, cpSync, rmSync } from 'fs';
+import { copyFileSync, cpSync, rmSync, mkdirSync, existsSync } from 'fs';
 
 const htmlInputs = {
   popup: resolve(__dirname, 'public/popup.html'),
@@ -15,13 +15,23 @@ export default defineConfig({
     {
       name: 'copy-static',
       closeBundle() {
-        copyFileSync('public/manifest.json', 'build/manifest.json');
-        cpSync('public/icons', 'build/icons', { recursive: true });
-        copyFileSync('public/config.js', 'build/config.js');
+        copyFileSync(resolve(__dirname, 'public/manifest.json'),
+          resolve(__dirname, 'build/manifest.json'));
+        cpSync(resolve(__dirname, 'public/icons'),
+          resolve(__dirname, 'build/icons'), { recursive: true });
+        copyFileSync(resolve(__dirname, 'public/config.js'),
+          resolve(__dirname, 'build/config.js'));
         // move processed html from public directory to build root
-        copyFileSync('build/public/popup.html', 'build/popup.html');
-        copyFileSync('build/public/dashboard.html', 'build/dashboard.html');
-        rmSync('build/public', { recursive: true, force: true });
+        const popupHtml = resolve(__dirname, 'build/public/popup.html');
+        const dashboardHtml = resolve(__dirname, 'build/public/dashboard.html');
+        if (existsSync(popupHtml)) {
+          copyFileSync(popupHtml, resolve(__dirname, 'build/popup.html'));
+        }
+        if (existsSync(dashboardHtml)) {
+          copyFileSync(dashboardHtml, resolve(__dirname, 'build/dashboard.html'));
+        }
+        if (existsSync(resolve(__dirname, 'build/public')))
+          rmSync(resolve(__dirname, 'build/public'), { recursive: true, force: true });
       }
     }
   ],
