@@ -3,6 +3,7 @@
 const SizePlugin = require('size-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 
 const PATHS = require('./paths');
 
@@ -23,6 +24,9 @@ const common = {
     errors: true,
     builtAt: true,
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.vue']
+  },
   module: {
     rules: [
       // Help webpack in understanding CSS files imported in .js files
@@ -30,8 +34,19 @@ const common = {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
+      // Allow processing Vue single-file components
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
       // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
-      { test: /\.tsx?$/, loader: "ts-loader" },
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        options: {
+          appendTsSuffixTo: [/\.vue$/]
+        }
+      },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       { test: /\.js$/, loader: "source-map-loader" },
       // Check for images imported in .js files and
@@ -61,6 +76,7 @@ const common = {
         },
       ]
     }),
+    new VueLoaderPlugin(),
     // Extract CSS into separate files
     new MiniCssExtractPlugin({
       filename: '[name].css',
