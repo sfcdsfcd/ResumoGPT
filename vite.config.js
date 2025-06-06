@@ -35,6 +35,13 @@ export default defineConfig({
       }
     }
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true
+      }
+    }
+  },
   build: {
     outDir: 'build',
     sourcemap: true,
