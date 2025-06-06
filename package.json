@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "My Chrome Extension",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build"
