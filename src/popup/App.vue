@@ -1,7 +1,6 @@
 <template>
   <div class="popup-wrapper container mx-auto text-center p-3">
     <!-- BootstrapVue inputs and buttons provide consistent styling and better accessibility -->
-    <b-button variant="info" class="mb-3" @click="summarizePage">Resumir Página</b-button>
     <div id="message" :class="messageType" v-if="message">{{ message }}</div>
     <!-- Using a BCard groups related fields with consistent padding and a subtle shadow, improving focus -->
     <b-card v-if="isLogin" class="mb-3">
@@ -60,21 +59,6 @@ function openDashboard() {
   window.close()
 }
 
-function summarizePage() {
-  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-    const tab = tabs[0]
-    if (!tab?.id) return
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ['contentScript.js']
-    }, () => {
-      chrome.tabs.sendMessage(tab.id!, {
-        action: 'SUMMARIZE_PAGE',
-        baseUrl: API_BASE_URL
-      })
-    })
-  })
-}
 
 function login() {
   fetch(`${API_BASE_URL}/login`, {
