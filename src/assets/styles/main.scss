@@ -1,5 +1,5 @@
 @use './variables' as vars;
-@use 'bootstrap/scss/bootstrap';
+@use 'bootstrap/scss/bootstrap' as bootstrap;
 
 body {
   font-family: 'Open Sans', Arial, sans-serif;
