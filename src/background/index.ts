@@ -6,17 +6,28 @@ const API_BASE_URL = isDevelopment
 
 async function summarize(text: string): Promise<string> {
   try {
+    const token: string = await new Promise((resolve) => {
+      chrome.storage.local.get('JWT_TOKEN', (result) => {
+        resolve(result.JWT_TOKEN);
+      });
+    });
+
     const response = await fetch(`${API_BASE_URL}/resumir`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ text })
     });
+
     if (!response.ok) {
       console.error(`Erro na API: ${response.status} ${response.statusText}`);
       return 'Erro ao conectar à API.';
     }
-    const data = await response.json();
-    return data.resumo || data.summary || 'Erro ao resumir.';
+
+    const json = await response.json();
+    return json.resumo || json.summary || 'Erro ao resumir.';
   } catch (err) {
     console.error(err);
     return 'Erro ao conectar à API.';

@@ -3,6 +3,7 @@ const express = require('express')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
+const OpenAI = require('openai')
 
 
 const { initDb } = require('./db')
@@ -106,6 +107,32 @@ async function start() {
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'failed to update API Key' });
+    }
+  });
+
+  app.post('/resumir', authMiddleware, async (req, res) => {
+    const { text } = req.body;
+    if (!text) {
+      return res.status(400).json({ error: 'texto obrigatório' });
+    }
+    try {
+      const user = await User.findByPk(req.userId);
+      if (!user || !user.api_key) {
+        return res.status(400).json({ error: 'API key não configurada' });
+      }
+      const client = new OpenAI({ apiKey: user.api_key });
+      const completion = await client.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          { role: 'system', content: 'Resuma o texto a seguir em até 5 frases.' },
+          { role: 'user', content: text }
+        ]
+      });
+      const resumo = completion.choices?.[0]?.message?.content?.trim() || '';
+      res.json({ resumo });
+    } catch (err) {
+      console.error('resumir failed', err);
+      res.status(500).json({ error: 'falha ao resumir' });
     }
   });
 
