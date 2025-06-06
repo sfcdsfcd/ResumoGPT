@@ -17,6 +17,7 @@
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.11.1",
     "sequelize": "^6.37.1",
-    "pg-hstore": "^2.3.4"
+    "pg-hstore": "^2.3.4",
+    "openai": "^5.1.1"
   }
 }
