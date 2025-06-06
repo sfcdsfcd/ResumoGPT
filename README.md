@@ -2,6 +2,10 @@
 
 ResumoGPT is a Chrome extension that uses OpenAI's GPT API to summarize selected text. Right click a selection and choose **Resumir seleção via GPT**, then open the popup to read the summary.
 
+## Requirements
+
+This project requires **Node.js 18**. Use `nvm` or a similar tool to ensure this version is installed and active when working on the codebase.
+
 ## Usage
 
 1. Run `npm install` to install dependencies.
