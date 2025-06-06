@@ -110,10 +110,9 @@ async function start() {
     }
   });
 
-  // Endpoint autenticado que usa a chave do usuário armazenada no banco
   app.post('/resumir', authMiddleware, async (req, res) => {
-    const { texto } = req.body;
-    if (!texto) {
+    const { text } = req.body;
+    if (!text) {
       return res.status(400).json({ error: 'texto obrigatório' });
     }
     try {
@@ -121,13 +120,12 @@ async function start() {
       if (!user || !user.api_key) {
         return res.status(400).json({ error: 'API key não configurada' });
       }
-
       const client = new OpenAI({ apiKey: user.api_key });
       const completion = await client.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: 'Resuma o texto a seguir em até 5 frases.' },
-          { role: 'user', content: texto }
+          { role: 'user', content: text }
         ]
       });
       const resumo = completion.choices?.[0]?.message?.content?.trim() || '';
