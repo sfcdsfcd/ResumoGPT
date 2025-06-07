@@ -6,11 +6,7 @@ describe('Popup authentication', () => {
   let wrapper: any;
   beforeEach(() => {
     (global as any).API_BASE_URL = 'http://localhost:3000/api';
-    wrapper = shallowMount(Popup, {
-      global: {
-        mocks: { $router: { push: jest.fn() } }
-      }
-    });
+    wrapper = shallowMount(Popup);
     Object.defineProperty(window, 'location', { value: { href: '' }, writable: true });
   });
 
