@@ -6,9 +6,7 @@ describe('Dashboard storage', () => {
   let wrapper: any;
   beforeEach(() => {
     (global as any).API_BASE_URL = 'http://localhost:3000/api';
-    wrapper = shallowMount(Dashboard, {
-      global: { mocks: { $router: { push: jest.fn() } } }
-    });
+    wrapper = shallowMount(Dashboard);
   });
 
   it('saves API_KEY to storage', async () => {

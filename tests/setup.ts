@@ -1,5 +1,16 @@
 import fetchMock from 'jest-fetch-mock';
+import { config } from '@vue/test-utils';
+import { BCard, BButton, BFormInput } from 'bootstrap-vue-3';
+import { createRouter, createWebHistory } from 'vue-router';
+
 fetchMock.enableMocks();
+
+// Register BootstrapVue components globally for all tests
+config.global.components = { BCard, BButton, BFormInput };
+
+// Provide a minimal router instance to satisfy useRouter() calls
+const router = createRouter({ history: createWebHistory(), routes: [] });
+config.global.plugins = [router];
 
 beforeEach(() => {
   fetchMock.resetMocks();
