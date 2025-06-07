@@ -45,15 +45,30 @@ function createSidebar(initialText = 'Gerando resumo...') {
 
   const bar = document.createElement('div');
   bar.id = 'resumogpt-sidebar';
+
   const header = document.createElement('header');
-  header.textContent = 'Resumo via GPT';
+  const title = document.createElement('div');
+  title.className = 'title';
+
+  const icon = document.createElement('span');
+  icon.className = 'icon';
+  icon.textContent = '\ud83e\udde0';
+
+  const text = document.createElement('span');
+  text.textContent = 'Resumo via GPT';
+
+  title.appendChild(icon);
+  title.appendChild(text);
+
   const close = document.createElement('button');
   close.id = 'resumogpt-close';
-  close.textContent = '\u00D7';
+  close.innerHTML = '&times;';
   close.addEventListener('click', () => {
     (window as any)[injectedFlag] = false;
     bar.remove();
   });
+
+  header.appendChild(title);
   header.appendChild(close);
   const content = document.createElement('div');
   content.className = 'content';

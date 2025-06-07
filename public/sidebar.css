@@ -1,5 +1,67 @@
-#resumogpt-sidebar{position:fixed;top:0;left:0;width:300px;height:100%;background:#fff;color:#000;z-index:2147483647;box-shadow:2px 0 5px rgba(0,0,0,.3);transform:translateX(-100%);transition:transform .3s ease;font-family:Arial,sans-serif;}
-#resumogpt-sidebar.open{transform:translateX(0);}
-#resumogpt-sidebar header{display:flex;align-items:center;justify-content:space-between;padding:10px;font-weight:bold;background:#f1f1f1;border-bottom:1px solid #ccc;}
-#resumogpt-sidebar .content{padding:10px;overflow-y:auto;height:calc(100% - 40px);white-space:pre-wrap;color:#000;}
-#resumogpt-close{background:none;border:none;font-size:20px;cursor:pointer;}
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Open+Sans:wght@400;600&display=swap');
+
+#resumogpt-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: clamp(320px, 80vw, 360px);
+  height: 100%;
+  background: #ffffff;
+  color: #333;
+  z-index: 2147483647;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  font-family: 'Roboto', 'Open Sans', Arial, sans-serif;
+}
+
+#resumogpt-sidebar.open {
+  transform: translateX(0);
+}
+
+#resumogpt-sidebar header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #f7f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+#resumogpt-sidebar header .title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#resumogpt-sidebar header .icon {
+  font-size: 20px;
+}
+
+#resumogpt-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+}
+
+#resumogpt-close:hover {
+  color: #000;
+}
+
+#resumogpt-sidebar .content {
+  margin: 16px;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: calc(100% - 80px);
+  overflow-y: auto;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  scroll-behavior: smooth;
+}
