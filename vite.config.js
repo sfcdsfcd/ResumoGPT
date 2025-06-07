@@ -22,6 +22,8 @@ export default defineConfig({
           resolve(__dirname, 'build/icons'), { recursive: true });
         copyFileSync(resolve(__dirname, 'public/config.js'),
           resolve(__dirname, 'build/config.js'));
+        copyFileSync(resolve(__dirname, 'public/sidebar.css'),
+          resolve(__dirname, 'build/sidebar.css'));
         // move processed html from public directory to build root
         const popupHtml = resolve(__dirname, 'build/public/popup.html');
         const dashboardHtml = resolve(__dirname, 'build/public/dashboard.html');
