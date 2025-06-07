@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 const API_BASE_URL = (window as any).API_BASE_URL
 
@@ -58,6 +58,38 @@ function openDashboard() {
   chrome.tabs.create({ url: chrome.runtime.getURL('dashboard.html') })
   window.close()
 }
+
+// Verifica automaticamente se existe um JWT válido e apiKey cadastrada
+function checkAuth() {
+  chrome.storage.local.get('JWT_TOKEN', async (result) => {
+    const token = result.JWT_TOKEN
+    if (!token) return
+    try {
+      const res = await fetch(`${API_BASE_URL}/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+        method: 'GET',
+        mode: 'cors'
+      })
+      if (!res.ok) {
+        // Remove token inválido
+        chrome.storage.local.remove('JWT_TOKEN')
+        return
+      }
+      const user = await res.json()
+      if (user && user.api_key) {
+        // Token e API key válidos: redireciona para ready.html
+        location.href = chrome.runtime.getURL('ready.html')
+      }
+    } catch (err) {
+      console.error('Falha ao validar token', err)
+    }
+  })
+}
+
+// Executa verificação assim que o componente é montado
+onMounted(() => {
+  checkAuth()
+})
 
 
 function login() {
