@@ -58,27 +58,35 @@ function openDashboard() {
   chrome.tabs.create({ url: chrome.runtime.getURL('dashboard.html') })
   window.close()
 }
+async function verifyApiKeyAndRedirect(token: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+      method: 'GET',
+      mode: 'cors'
+    })
+    if (!res.ok) {
+      chrome.storage.local.remove('JWT_TOKEN')
+      showMessage('Sessão expirada')
+      return
+    }
+    const user = await res.json()
+    const key = user?.api_key || user?.apiKey
+    if (key) {
+      location.href = chrome.runtime.getURL('ready.html')
+    } else {
+      location.href = chrome.runtime.getURL('dashboard.html')
+    }
+  } catch (err) {
+    console.error('Falha ao verificar apiKey', err)
+    showMessage('Erro ao verificar apiKey')
+  }
+}
 function checkAuth() {
   chrome.storage.local.get('JWT_TOKEN', async (result) => {
     const token = result.JWT_TOKEN
     if (!token) return
-    try {
-      const res = await fetch(`${API_BASE_URL}/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-        method: 'GET',
-        mode: 'cors'
-      })
-      if (!res.ok) {
-        chrome.storage.local.remove('JWT_TOKEN')
-        return
-      }
-      const user = await res.json()
-      if (user && user.api_key) {
-        location.href = chrome.runtime.getURL('ready.html')
-      }
-    } catch (err) {
-      console.error('Falha ao validar token', err)
-    }
+    await verifyApiKeyAndRedirect(token)
   })
 }
 onMounted(() => {
@@ -86,57 +94,55 @@ onMounted(() => {
 })
 
 
-function login() {
-  fetch(`${API_BASE_URL}/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    mode: 'cors',
-    body: JSON.stringify({
-      email: loginEmail.value,
-      password: loginPassword.value
+async function login() {
+  try {
+    const r = await fetch(`${API_BASE_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      mode: 'cors',
+      body: JSON.stringify({
+        email: loginEmail.value,
+        password: loginPassword.value
+      })
     })
-  })
-    .then(r => r.json())
-    .then(data => {
-      if (data.token) {
-        chrome.storage.local.set({ JWT_TOKEN: data.token }, () => {
-          showMessage('Login successful', true)
-          loginSuccess.value = true
-        })
-      } else {
-        showMessage(data.error || 'Login failed')
-      }
-    })
-    .catch(() => showMessage('Login failed'))
+    const data = await r.json()
+    if (data.token) {
+      chrome.storage.local.set({ JWT_TOKEN: data.token }, async () => {
+        await verifyApiKeyAndRedirect(data.token)
+      })
+    } else {
+      showMessage(data.error || 'Login failed')
+    }
+  } catch {
+    showMessage('Login failed')
+  }
 }
 
-function register() {
-  fetch(`${API_BASE_URL}/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    mode: 'cors',
-    body: JSON.stringify({
-      username: registerUsername.value,
-      email: registerEmail.value,
-      password: registerPassword.value
+async function register() {
+  try {
+    const r = await fetch(`${API_BASE_URL}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      mode: 'cors',
+      body: JSON.stringify({
+        username: registerUsername.value,
+        email: registerEmail.value,
+        password: registerPassword.value
+      })
     })
-  })
-    .then(r => r.json())
-    .then(data => {
-      if (data.token) {
-        chrome.storage.local.set({ JWT_TOKEN: data.token }, () => {
-          showMessage('Registered', true)
-          setTimeout(() => {
-            router.push('/dashboard.html')
-          }, 500)
-        })
-      } else if (data.message) {
-        showMessage(data.message, true)
-      } else {
-        showMessage(data.error || 'Register failed')
-      }
-    })
-    .catch(() => showMessage('Register failed'))
+    const data = await r.json()
+    if (data.token) {
+      chrome.storage.local.set({ JWT_TOKEN: data.token }, async () => {
+        await verifyApiKeyAndRedirect(data.token)
+      })
+    } else if (data.message) {
+      showMessage(data.message, true)
+    } else {
+      showMessage(data.error || 'Register failed')
+    }
+  } catch {
+    showMessage('Register failed')
+  }
 }
 </script>
 
