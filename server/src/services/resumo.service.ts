@@ -5,7 +5,7 @@ export class ResumoService {
 
   async gerarResumo(texto: string): Promise<string> {
     const completion = await this.client.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: 'Resuma o texto a seguir em até 5 frases.' },
         { role: 'user', content: texto },
