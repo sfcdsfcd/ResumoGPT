@@ -29,6 +29,31 @@ export class AuthController {
       next(err)
     }
   }
+
+  async me(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = await this.service.getCurrentUser((req as any).userId)
+      if (!user) {
+        return res.status(404).json({ error: 'user not found' })
+      }
+      res.json(user)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  async updateApiKey(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { apiKey } = req.body
+      if (!apiKey) {
+        return res.status(400).json({ error: 'apiKey required' })
+      }
+      await this.service.updateApiKey((req as any).userId, apiKey)
+      res.json({ message: 'API Key updated' })
+    } catch (err) {
+      next(err)
+    }
+  }
 }
 
 export const authController = new AuthController(new AuthService())
