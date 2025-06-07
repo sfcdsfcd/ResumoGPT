@@ -1,7 +1,7 @@
 {
   "name": "resumo-backend",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "dist/server.js",
   "license": "MIT",
   "engines": {
     "node": "18.x"
@@ -16,9 +16,18 @@
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "openai": "^5.1.1",
     "pg": "^8.11.1",
-    "sequelize": "^6.37.1",
     "pg-hstore": "^2.3.4",
-    "openai": "^5.1.1"
+    "sequelize": "^6.37.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^18.17.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }
