@@ -14,7 +14,6 @@ services:
   api:
     build: ./server
     restart: always
-    command: npm run debug
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}

@@ -1,11 +1,17 @@
 FROM node:18-alpine
+
 WORKDIR /app
-COPY package.json package-lock.json tsconfig.json ./
+
+COPY package*.json tsconfig.json ./
+
+# Instala dependências com suporte à build nativa
 RUN apk add --no-cache --virtual .build-deps \
-    make g++ python3 && \
+    python3 make g++ && \
     npm install && \
     apk del .build-deps
-RUN npm ci
-COPY . ./
-RUN npm run build && npm prune --production
-CMD ["npm", "start"]
+
+COPY . .
+
+RUN npm run build
+
+CMD ["npm", "run", "start"]
