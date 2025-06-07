@@ -9,7 +9,7 @@ fetchMock.enableMocks();
 config.global.components = { BCard, BButton, BFormInput };
 
 // Provide a minimal router instance to satisfy useRouter() calls
-const router = createRouter({ history: createWebHistory(), routes: [] });
+const router = createRouter({ history: createMemoryHistory(), routes: [] });
 config.global.plugins = [router];
 
 beforeEach(() => {
