@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { resumoController } from '../controllers/resumo.controller'
+
 import { authMiddleware } from '../middlewares/auth'
 
 const router = Router()

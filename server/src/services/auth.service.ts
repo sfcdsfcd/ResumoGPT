@@ -20,7 +20,6 @@ export class AuthService {
     }
     return jwt.sign({ userId: user.id }, env.jwtSecret, { expiresIn: '1h' })
   }
-
   async getCurrentUser(userId: number) {
     return User.findByPk(userId, {
       attributes: ['username', 'email', 'api_key'],

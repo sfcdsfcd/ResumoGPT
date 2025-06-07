@@ -5,7 +5,8 @@ import { copyFileSync, cpSync, rmSync, mkdirSync, existsSync } from 'fs';
 
 const htmlInputs = {
   popup: resolve(__dirname, 'public/popup.html'),
-  dashboard: resolve(__dirname, 'public/dashboard.html')
+  dashboard: resolve(__dirname, 'public/dashboard.html'),
+  ready: resolve(__dirname, 'public/ready.html')
 };
 
 export default defineConfig({
@@ -24,11 +25,15 @@ export default defineConfig({
         // move processed html from public directory to build root
         const popupHtml = resolve(__dirname, 'build/public/popup.html');
         const dashboardHtml = resolve(__dirname, 'build/public/dashboard.html');
+        const readyHtml = resolve(__dirname, 'build/public/ready.html');
         if (existsSync(popupHtml)) {
           copyFileSync(popupHtml, resolve(__dirname, 'build/popup.html'));
         }
         if (existsSync(dashboardHtml)) {
           copyFileSync(dashboardHtml, resolve(__dirname, 'build/dashboard.html'));
+        }
+        if (existsSync(readyHtml)) {
+          copyFileSync(readyHtml, resolve(__dirname, 'build/ready.html'));
         }
         if (existsSync(resolve(__dirname, 'build/public')))
           rmSync(resolve(__dirname, 'build/public'), { recursive: true, force: true });

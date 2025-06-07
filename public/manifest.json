@@ -34,7 +34,8 @@
         "popup.js",
         "dashboard.html",
         "dashboard.js",
-        "contentScript.js"
+        "contentScript.js",
+        "ready.html"
       ],
       "matches": ["<all_urls>"]
     }
