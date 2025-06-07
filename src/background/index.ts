@@ -84,3 +84,5 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     chrome.tabs.sendMessage(tab.id, { action: 'SHOW_SUMMARY', summary: resumo });
   }
 });
+
+export { summarize };

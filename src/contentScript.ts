@@ -83,7 +83,7 @@ function createSidebar(initialText = 'Gerando resumo...') {
 if (!(window as any)[listenerFlag]) {
   (window as any)[listenerFlag] = true;
 
-  chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg.action === 'PING') {
       sendResponse?.({ status: 'pong' });
       return;
@@ -129,3 +129,5 @@ if (!(window as any)[listenerFlag]) {
   }
   });
 }
+
+export { createSidebar };
