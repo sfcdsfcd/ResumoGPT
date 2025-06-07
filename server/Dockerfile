@@ -5,6 +5,7 @@ RUN apk add --no-cache --virtual .build-deps \
     make g++ python3 && \
     npm install && \
     apk del .build-deps
+RUN npm ci
 COPY . ./
 RUN npm run build && npm prune --production
 CMD ["npm", "start"]
