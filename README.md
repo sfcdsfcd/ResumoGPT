@@ -51,3 +51,30 @@ The API exposes the following endpoints:
 
 Sequelize manages the PostgreSQL schema and creates the required tables when the server starts.
 The server waits for this initialization to finish before it begins accepting requests.
+
+## Debugging the API inside Docker
+
+To attach a debugger to the Node.js process in the `api` container, expose the
+inspection port and run the server with the `debug` script.
+
+1. Update `docker-compose.yml` to map port `9229` and run the debug command.
+   The `api` service should look like:
+
+   ```yaml
+   api:
+     build: ./server
+     restart: always
+     command: npm run debug
+     ports:
+       - "3000:3000"
+       - "9229:9229"
+   ```
+
+2. Start the containers:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+3. Attach your debugger (e.g. Chrome DevTools or VS Code) to
+   `localhost:9229` and set breakpoints normally.
