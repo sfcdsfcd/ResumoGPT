@@ -43,6 +43,17 @@ docker-compose up --build
 
 Environment variables can be configured by copying `server/.env.example` to `server/.env` and adjusting the values.
 
+When running the backend locally without Docker you must compile the TypeScript source first:
+
+```bash
+cd server
+npm install
+npm run build
+npm start
+```
+
+The Docker image performs these steps automatically during `docker-compose up`.
+
 The API exposes the following endpoints:
 
 - `POST /register` – create a new user with hashed password.
