@@ -1,9 +1,9 @@
-import express from 'express'
 import cors from 'cors'
-import resumoRoutes from './routes/resumo.routes'
-import authRoutes from './routes/auth.routes'
-import { errorHandler } from './middlewares/errorHandler'
+import express from 'express'
 import { env } from './config/env'
+import { errorHandler } from './middlewares/errorHandler'
+import authRoutes from './routes/auth.routes'
+import resumoRoutes from './routes/resumo.routes'
 
 export function createApp() {
   const app = express()

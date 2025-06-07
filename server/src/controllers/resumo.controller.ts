@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from 'express'
+import { NextFunction, Request, Response } from 'express'
+import User from '../models/user'
 import { ResumoService } from '../services/resumo.service'
 import { createOpenAIClient } from '../utils/openaiClient'
 
