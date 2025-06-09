@@ -1,18 +1,16 @@
 <template>
-  <!-- BootstrapVue components unify the styling of inputs and buttons -->
-  <!-- BCard groups dashboard actions for a cleaner layout -->
-  <b-card>
-    <h1>Dashboard</h1>
-    <div id="info">{{ info }}</div>
-    <b-form-input v-model="apiKey" id="api-key" type="text" placeholder="API Key" class="mb-3" />
-    <!-- Actions aligned with Bootstrap utility classes -->
-    <div class="d-flex justify-content-between mb-3">
-      <!-- Variant colors draw attention to primary and destructive actions -->
-      <b-button id="save-api-key" variant="primary" @click="saveApiKey">Salvar API Key</b-button>
-      <b-button id="logout" variant="danger" @click="logout">Logout</b-button>
-    </div>
-    <div id="api-message" class="success" v-if="apiMessage">{{ apiMessage }}</div>
-  </b-card>
+  <div class="popup-wrapper container mx-auto text-center p-3">
+    <b-card>
+      <h1>Dashboard</h1>
+      <div id="info">{{ info }}</div>
+      <b-form-input v-model="apiKey" id="api-key" type="text" placeholder="API Key" class="mb-3" />
+      <div class="d-flex justify-content-between mb-3">
+        <b-button id="save-api-key" variant="primary" @click="saveApiKey">Salvar API Key</b-button>
+        <b-button id="logout" variant="danger" @click="logout">Logout</b-button>
+      </div>
+      <div id="api-message" class="success" v-if="apiMessage">{{ apiMessage }}</div>
+    </b-card>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -77,3 +75,12 @@ function saveApiKey() {
   });
 }
 </script>
+<style scoped>
+.popup-wrapper {
+  min-width: 300px;
+  max-width: 400px;
+  width: 100%;
+  max-height: 600px;
+  overflow-y: auto;
+}
+</style>

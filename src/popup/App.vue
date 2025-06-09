@@ -1,34 +1,31 @@
 <template>
   <div class="popup-wrapper container mx-auto text-center p-3">
-    <!-- BootstrapVue inputs and buttons provide consistent styling and better accessibility -->
     <div id="message" :class="messageType" v-if="message">{{ message }}</div>
-    <!-- Using a BCard groups related fields with consistent padding and a subtle shadow, improving focus -->
-    <b-card v-if="isLogin" class="mb-3">
+    <BCard v-if="isLogin">
       <h1>Login</h1>
       <b-form-input v-model="loginEmail" type="email" placeholder="Email" class="mb-3" />
       <b-form-input v-model="loginPassword" type="password" placeholder="Password" class="mb-3" />
-      <!-- Utility classes keep actions aligned and spaced -->
       <div class="d-flex justify-content-between mb-3">
         <b-button variant="primary" @click="login">Login</b-button>
         <b-button variant="secondary" @click="toggleForm">Cadastre-se</b-button>
       </div>
       <b-button v-if="loginSuccess" variant="success" @click="openDashboard">Abrir Dashboard</b-button>
-    </b-card>
-    <b-card v-else class="mb-3">
+    </BCard>
+    <BCard v-else>
       <h1>Register</h1>
       <b-form-input v-model="registerUsername" type="text" placeholder="Username" class="mb-3" />
       <b-form-input v-model="registerEmail" type="email" placeholder="Email" class="mb-3" />
       <b-form-input v-model="registerPassword" type="password" placeholder="Password" class="mb-3" />
-      <!-- Buttons share space evenly on small screens -->
       <div class="d-flex justify-content-between">
         <b-button variant="primary" @click="register">Register</b-button>
         <b-button variant="secondary" @click="toggleForm">Voltar ao login</b-button>
       </div>
-    </b-card>
+    </BCard>
   </div>
 </template>
 
 <script setup lang="ts">
+/// <reference types="chrome" />
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 const API_BASE_URL = (window as any).API_BASE_URL

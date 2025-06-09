@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import { resolve } from 'path';
-import { copyFileSync, cpSync, rmSync, mkdirSync, existsSync } from 'fs';
+import vue from '@vitejs/plugin-vue'
+import { copyFileSync, cpSync, existsSync, mkdirSync, rmSync } from 'fs'
+import { resolve } from 'path'
+import { defineConfig } from 'vite'
 
 const htmlInputs = {
   popup: resolve(__dirname, 'public/popup.html'),
@@ -39,6 +39,21 @@ export default defineConfig({
         }
         if (existsSync(resolve(__dirname, 'build/public')))
           rmSync(resolve(__dirname, 'build/public'), { recursive: true, force: true });
+
+        // Move arquivos que começam com _ para a pasta chunks/
+        const buildDir = resolve(__dirname, 'build');
+        const chunksDir = resolve(buildDir, 'chunks');
+        if (!existsSync(chunksDir)) mkdirSync(chunksDir);
+        const files = require('fs').readdirSync(buildDir);
+        files.forEach(file => {
+          if (file.startsWith('_')) {
+            const oldPath = resolve(buildDir, file);
+            const newPath = resolve(chunksDir, file);
+            if (existsSync(oldPath)) {
+              require('fs').renameSync(oldPath, newPath);
+            }
+          }
+        });
       }
     }
   ],
