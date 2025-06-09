@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../db'
+import { ApiKeyType } from '../types/apiKeyType'
 
 const User = sequelize.define('User', {
   id: {
@@ -25,7 +26,9 @@ const User = sequelize.define('User', {
     type: DataTypes.TEXT,
   },
   api_key_type: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.ENUM(ApiKeyType.OPENAI, ApiKeyType.DEEPSEEK),
+    allowNull: false,
+    defaultValue: ApiKeyType.OPENAI,
   },
 }, {
   tableName: 'users',

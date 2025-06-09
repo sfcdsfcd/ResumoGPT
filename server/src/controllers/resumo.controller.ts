@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { container, injectable } from 'tsyringe'
 import User from '../models/user'
 import { ResumoService } from '../services/resumo.service'
+import { ApiKeyType } from '../types/apiKeyType'
 
 @injectable()
 export class ResumoController {
@@ -20,7 +21,7 @@ export class ResumoController {
       const resumo = await this.service.gerarResumo(
         text,
         (user as any).api_key,
-        (user as any).api_key_type || 'openai'
+        (user as any).api_key_type || ApiKeyType.OPENAI
       )
       res.json({ resumo })
     } catch (err) {

@@ -1,18 +1,19 @@
 import OpenAI from 'openai'
+import { ApiKeyType } from '../types/apiKeyType'
 
 export type OpenAIClientFactory = (
   apiKey: string,
-  tipo: 'openai' | 'deepseek'
+  tipo: ApiKeyType
 ) => OpenAI
 
 export const createOpenAIClient: OpenAIClientFactory = (
   apiKey,
-  tipo = 'openai'
+  tipo = ApiKeyType.OPENAI
 ) => {
   return new OpenAI({
     apiKey,
     baseURL:
-      tipo === 'deepseek'
+      tipo === ApiKeyType.DEEPSEEK
         ? 'https://api.deepseek.com'
         : 'https://api.openai.com'
   })

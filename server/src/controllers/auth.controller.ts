@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { container, injectable } from 'tsyringe'
 import { AuthService } from '../services/auth.service'
+import { ApiKeyType } from '../types/apiKeyType'
 
 @injectable()
 export class AuthController {
@@ -12,7 +13,11 @@ export class AuthController {
       if (!username || !email || !password) {
         return res.status(400).json({ error: 'username, email and password required' })
       }
-      await this.service.register(username, email, password, apiKey, tipo)
+      if (tipo && !Object.values(ApiKeyType).includes(tipo)) {
+        return res.status(400).json({ error: 'invalid tipo' })
+      }
+      const apiKeyType: ApiKeyType = tipo || ApiKeyType.OPENAI
+      await this.service.register(username, email, password, apiKey, apiKeyType)
       res.status(201).json({ message: 'user created' })
     } catch (err) {
       next(err)
@@ -55,7 +60,7 @@ export class AuthController {
       if (!apiKey || !tipo) {
         return res.status(400).json({ error: 'apiKey and tipo required' })
       }
-      if (tipo !== 'openai' && tipo !== 'deepseek') {
+      if (!Object.values(ApiKeyType).includes(tipo)) {
         return res.status(400).json({ error: 'invalid tipo' })
       }
       await this.service.updateApiKey((req as any).userId, apiKey, tipo)

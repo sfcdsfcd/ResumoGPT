@@ -1,6 +1,7 @@
 import OpenAI from 'openai'
 import { inject, injectable } from 'tsyringe'
 import { OpenAIClientFactory } from '../utils/openaiClient'
+import { ApiKeyType } from '../types/apiKeyType'
 
 @injectable()
 export class ResumoService {
@@ -11,7 +12,7 @@ export class ResumoService {
   async gerarResumo(
     texto: string,
     apiKey: string,
-    tipo: 'openai' | 'deepseek' = 'openai'
+    tipo: ApiKeyType = ApiKeyType.OPENAI
   ): Promise<string> {
     const client = this.createClient(apiKey, tipo)
     const completion = await client.chat.completions.create({
