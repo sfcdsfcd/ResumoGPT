@@ -8,10 +8,10 @@ This project requires **Node.js 18**. Use `nvm` or a similar tool to ensure this
 
 ## Usage
 
-1. Run `npm install` to install dependencies.
-2. Execute `npm run dev` to start Vite in watch mode.
+1. Navigate to the `frontend` directory and run `npm install` to install dependencies.
+2. Execute `npm run dev` inside `frontend` to start Vite in watch mode.
 3. Open `chrome://extensions`, enable **Developer mode** and choose **Load unpacked**.
-4. Select the `build` directory to load the extension.
+4. Select the `frontend/build` directory to load the extension.
 5. When prompted, provide your OpenAI API token in the popup.
 
 ## Build
@@ -19,18 +19,22 @@ This project requires **Node.js 18**. Use `nvm` or a similar tool to ensure this
 To create a production build with Vite run:
 
 ```bash
+cd frontend
 npm run build
 ```
 
-The bundled files will be output to the `build` folder.
+The bundled files will be output to the `frontend/build` folder.
 
 ## Directory structure
 
 ```
-src/
-├── popup/       # extension popup UI
-├── dashboard/   # dashboard page
-└── background/  # background script
+frontend/
+  └── src/
+      ├── popup/       # extension popup UI
+      ├── dashboard/   # dashboard page
+      └── background/  # background script
+server/
+  └── src/             # Express API
 ```
 
 ## Backend API

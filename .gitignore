@@ -3,6 +3,7 @@
 postgres-data/
 node_modules/
 build/
+frontend/build/
 *.log
 
 # misc
