@@ -14,7 +14,9 @@ export class ResumoController {
       if (!user || !(user as any).api_key) {
         return res.status(400).json({ error: 'API key not configured' })
       }
-      const service = new ResumoService(createOpenAIClient((user as any).api_key))
+      const service = new ResumoService(
+        createOpenAIClient((user as any).api_key, (user as any).api_key_type || 'openai')
+      )
       const resumo = await service.gerarResumo(text)
       res.json({ resumo })
     } catch (err) {

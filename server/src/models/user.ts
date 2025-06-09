@@ -24,6 +24,9 @@ const User = sequelize.define('User', {
   api_key: {
     type: DataTypes.TEXT,
   },
+  api_key_type: {
+    type: DataTypes.STRING(20),
+  },
 }, {
   tableName: 'users',
   timestamps: false,

@@ -1,7 +1,7 @@
 let createSidebar: any;
 
 beforeAll(async () => {
-  (global as any).chrome = {
+  (globalThis as any).chrome = {
     runtime: {
       getURL: jest.fn(() => ''),
       onMessage: { addListener: jest.fn() }

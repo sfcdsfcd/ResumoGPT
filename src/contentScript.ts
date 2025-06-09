@@ -32,7 +32,8 @@ function collectText(): string {
   });
   let text = '';
   while (walker.nextNode()) {
-    text += walker.currentNode.nodeValue.trim() + ' ';
+    const val = walker.currentNode.nodeValue || '';
+    text += val.trim() + ' ';
     if (text.length > 6000) break;
   }
   return text;
