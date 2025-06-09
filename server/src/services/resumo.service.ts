@@ -1,10 +1,20 @@
 import OpenAI from 'openai'
+import { inject, injectable } from 'tsyringe'
+import { OpenAIClientFactory } from '../utils/openaiClient'
 
+@injectable()
 export class ResumoService {
-  constructor(private client: OpenAI) {}
+  constructor(
+    @inject('OpenAIClientFactory') private readonly createClient: OpenAIClientFactory
+  ) {}
 
-  async gerarResumo(texto: string): Promise<string> {
-    const completion = await this.client.chat.completions.create({
+  async gerarResumo(
+    texto: string,
+    apiKey: string,
+    tipo: 'openai' | 'deepseek' = 'openai'
+  ): Promise<string> {
+    const client = this.createClient(apiKey, tipo)
+    const completion = await client.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: 'Resuma o texto a seguir em até 5 frases.' },

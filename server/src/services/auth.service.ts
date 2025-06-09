@@ -1,8 +1,10 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { injectable } from 'tsyringe'
 import User from '../models/user'
 import { env } from '../config/env'
 
+@injectable()
 export class AuthService {
   async register(
     username: string,

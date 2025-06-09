@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
+import { container, injectable } from 'tsyringe'
 import User from '../models/user'
 import { ResumoService } from '../services/resumo.service'
-import { createOpenAIClient } from '../utils/openaiClient'
 
+@injectable()
 export class ResumoController {
+  constructor(private service: ResumoService) {}
+
   async resumir(req: Request, res: Response, next: NextFunction) {
     try {
       const { text } = req.body
@@ -14,10 +17,11 @@ export class ResumoController {
       if (!user || !(user as any).api_key) {
         return res.status(400).json({ error: 'API key not configured' })
       }
-      const service = new ResumoService(
-        createOpenAIClient((user as any).api_key, (user as any).api_key_type || 'openai')
+      const resumo = await this.service.gerarResumo(
+        text,
+        (user as any).api_key,
+        (user as any).api_key_type || 'openai'
       )
-      const resumo = await service.gerarResumo(text)
       res.json({ resumo })
     } catch (err) {
       next(err)
@@ -25,4 +29,4 @@ export class ResumoController {
   }
 }
 
-export const resumoController = new ResumoController()
+export const resumoController = container.resolve(ResumoController)
