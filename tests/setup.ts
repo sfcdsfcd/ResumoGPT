@@ -1,21 +1,10 @@
-import { config } from '@vue/test-utils';
-import { BButton, BCard, BFormInput } from 'bootstrap-vue-3';
 import fetchMock from 'jest-fetch-mock';
-import { createMemoryHistory, createRouter } from 'vue-router';
 
 fetchMock.enableMocks();
 
-// Register BootstrapVue components globally for all tests
-config.global.components = { BCard, BButton, BFormInput };
-
-// Provide a minimal router instance to satisfy useRouter() calls
-const router = createRouter({ history: createMemoryHistory(), routes: [
-  { path: '/', component: { template: '<div />' } }
-] });
-config.global.plugins = [router];
-
 beforeEach(() => {
   fetchMock.resetMocks();
+  (global as any).requestAnimationFrame = (cb: Function) => setTimeout(cb, 0);
   (global as any).chrome = {
     storage: { local: { get: jest.fn(), set: jest.fn(), remove: jest.fn() } },
     runtime: {

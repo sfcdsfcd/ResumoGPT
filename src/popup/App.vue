@@ -1,26 +1,61 @@
 <template>
-  <div class="popup-wrapper container mx-auto text-center p-3">
-    <div id="message" :class="messageType" v-if="message">{{ message }}</div>
-    <BCard v-if="isLogin">
-      <h1>Login</h1>
-      <b-form-input v-model="loginEmail" type="email" placeholder="Email" class="mb-3" />
-      <b-form-input v-model="loginPassword" type="password" placeholder="Password" class="mb-3" />
+  <div class="popup-wrapper d-flex align-items-center justify-content-center">
+    <b-card class="auth-card shadow-sm">
+      <h2 class="text-center mb-4">{{ isLogin ? 'Login' : 'Cadastre-se' }}</h2>
+      <b-form-input
+        v-if="isLogin"
+        v-model="loginEmail"
+        type="email"
+        placeholder="Email"
+        class="mb-3"
+      />
+      <b-form-input
+        v-if="isLogin"
+        v-model="loginPassword"
+        type="password"
+        placeholder="Senha"
+        class="mb-3"
+      />
+      <b-form-input
+        v-if="!isLogin"
+        v-model="registerUsername"
+        placeholder="Usuário"
+        class="mb-3"
+      />
+      <b-form-input
+        v-if="!isLogin"
+        v-model="registerEmail"
+        type="email"
+        placeholder="Email"
+        class="mb-3"
+      />
+      <b-form-input
+        v-if="!isLogin"
+        v-model="registerPassword"
+        type="password"
+        placeholder="Senha"
+        class="mb-3"
+      />
       <div class="d-flex justify-content-between mb-3">
-        <b-button variant="primary" @click="login">Login</b-button>
-        <b-button variant="secondary" @click="toggleForm">Cadastre-se</b-button>
+        <b-button variant="primary" @click="isLogin ? login() : register()">
+          <i class="bi" :class="isLogin ? 'bi-box-arrow-in-right' : 'bi-person-check'" />
+          <span class="ms-1">{{ isLogin ? 'Login' : 'Registrar' }}</span>
+        </b-button>
+        <b-button variant="secondary" @click="toggleForm">
+          <i class="bi" :class="isLogin ? 'bi-person-plus' : 'bi-arrow-left'" />
+          <span class="ms-1">{{ isLogin ? 'Cadastre-se' : 'Voltar' }}</span>
+        </b-button>
       </div>
-      <b-button v-if="loginSuccess" variant="success" @click="openDashboard">Abrir Dashboard</b-button>
-    </BCard>
-    <BCard v-else>
-      <h1>Register</h1>
-      <b-form-input v-model="registerUsername" type="text" placeholder="Username" class="mb-3" />
-      <b-form-input v-model="registerEmail" type="email" placeholder="Email" class="mb-3" />
-      <b-form-input v-model="registerPassword" type="password" placeholder="Password" class="mb-3" />
-      <div class="d-flex justify-content-between">
-        <b-button variant="primary" @click="register">Register</b-button>
-        <b-button variant="secondary" @click="toggleForm">Voltar ao login</b-button>
-      </div>
-    </BCard>
+      <b-button
+        v-if="loginSuccess"
+        variant="success"
+        class="w-100"
+        @click="openDashboard"
+      >
+        Abrir Dashboard
+      </b-button>
+      <div v-if="message" :class="messageType" class="mt-3 text-center">{{ message }}</div>
+    </b-card>
   </div>
 </template>
 
@@ -90,7 +125,6 @@ onMounted(() => {
   checkAuth()
 })
 
-
 async function login() {
   try {
     const r = await fetch(`${API_BASE_URL}/login`, {
@@ -143,12 +177,14 @@ async function register() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 .popup-wrapper {
-  min-width: 300px;
-  max-width: 400px;
-  width: 100%;
-  max-height: 600px;
-  overflow-y: auto;
+  width: 360px;
+  margin: 0 auto;
+  font-family: 'Roboto', 'Open Sans', sans-serif;
+}
+.auth-card {
+  border-radius: 0.75rem;
 }
 </style>

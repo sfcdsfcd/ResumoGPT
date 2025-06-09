@@ -1,9 +1,13 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import '../assets/styles/main.scss';
-import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
-import BootstrapVue3 from 'bootstrap-vue-3';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
+import { BootstrapVueNext, BCard, BButton, BFormInput } from 'bootstrap-vue-next';
 
 const app = createApp(App);
-app.use(BootstrapVue3);
+app.use(BootstrapVueNext);
+app.component('BCard', BCard);
+app.component('BButton', BButton);
+app.component('BFormInput', BFormInput);
 app.mount('#app');
