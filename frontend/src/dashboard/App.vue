@@ -4,6 +4,11 @@
       <h1>Dashboard</h1>
       <div id="info">{{ info }}</div>
       <b-form-input v-model="apiKey" id="api-key" type="text" placeholder="API Key" class="mb-3" />
+      <b-form-select v-model="tipo" class="mb-3">
+        <b-form-select-option value="openai">OpenAI (ChatGPT)</b-form-select-option>
+        <b-form-select-option value="deepseek">DeepSeek</b-form-select-option>
+      </b-form-select>
+      <small class="text-muted d-block mb-2">DeepSeek usa a mesma API do OpenAI porém com outra base URL.</small>
       <div class="d-flex justify-content-between mb-3">
         <b-button id="save-api-key" variant="primary" @click="saveApiKey">Salvar API Key</b-button>
         <b-button id="logout" variant="danger" @click="logout">Logout</b-button>
@@ -19,22 +24,27 @@ import { useRouter } from 'vue-router'
 
 const info = ref('')
 const apiKey = ref('')
+const tipo = ref<'openai' | 'deepseek'>('openai')
 const apiMessage = ref('')
 const router = useRouter()
 
 onMounted(() => {
   chrome.storage.local.get('JWT_TOKEN', data => {
-    if (!data.JWT_TOKEN) {
+    const token = data.JWT_TOKEN
+    if (!token) {
       router.push('/popup.html')
-    } else {
-      info.value = 'Logged in'
+      return
     }
-  })
-
-  chrome.storage.local.get('API_TOKEN', data => {
-    if (data.API_TOKEN) {
-      apiKey.value = data.API_TOKEN
-    }
+    info.value = 'Logged in'
+    fetch(`${(window as any).API_BASE_URL}/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+      mode: 'cors'
+    })
+      .then(r => r.json())
+      .then(u => {
+        if (u.api_key) apiKey.value = u.api_key
+        if (u.tipoApiKey) tipo.value = u.tipoApiKey
+      })
   })
 })
 
@@ -57,7 +67,7 @@ function saveApiKey() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ apiKey: apiKey.value })
+      body: JSON.stringify({ apiKey: apiKey.value, tipo: tipo.value })
     })
       .then(r => r.json())
       .then(res => {

@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS users (
   username VARCHAR(100) UNIQUE NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
-  api_key TEXT
+  api_key TEXT,
+  api_key_type VARCHAR(20)
 );

@@ -4,9 +4,21 @@ import User from '../models/user'
 import { env } from '../config/env'
 
 export class AuthService {
-  async register(username: string, email: string, password: string, apiKey?: string): Promise<void> {
+  async register(
+    username: string,
+    email: string,
+    password: string,
+    apiKey?: string,
+    tipo: 'openai' | 'deepseek' = 'openai'
+  ): Promise<void> {
     const hash = await bcrypt.hash(password, 10)
-    await User.create({ username, email, password_hash: hash, api_key: apiKey || null })
+    await User.create({
+      username,
+      email,
+      password_hash: hash,
+      api_key: apiKey || null,
+      api_key_type: tipo
+    })
   }
 
   async login(email: string, password: string): Promise<string> {
@@ -22,16 +34,21 @@ export class AuthService {
   }
   async getCurrentUser(userId: number) {
     return User.findByPk(userId, {
-      attributes: ['username', 'email', 'api_key'],
+      attributes: ['username', 'email', 'api_key', 'api_key_type'],
     })
   }
 
-  async updateApiKey(userId: number, apiKey: string): Promise<void> {
+  async updateApiKey(
+    userId: number,
+    apiKey: string,
+    tipo: 'openai' | 'deepseek'
+  ): Promise<void> {
     const user = await User.findByPk(userId)
     if (!user) {
       throw new Error('user not found')
     }
     ;(user as any).api_key = apiKey
+    ;(user as any).api_key_type = tipo
     await user.save()
   }
 }

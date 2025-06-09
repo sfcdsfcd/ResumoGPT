@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import Dashboard from '../src/dashboard/App.vue';
 import fetchMock from 'jest-fetch-mock';
-import { BCard, BButton, BFormInput } from 'bootstrap-vue-next';
+import { BCard, BButton, BFormInput, BFormSelect } from 'bootstrap-vue-next';
 import { createMemoryHistory, createRouter } from 'vue-router';
 
 describe('Dashboard storage', () => {
@@ -11,7 +11,7 @@ describe('Dashboard storage', () => {
     const router = createRouter({ history: createMemoryHistory(), routes: [] });
     wrapper = shallowMount(Dashboard, {
       global: {
-        components: { BCard, BButton, BFormInput },
+        components: { BCard, BButton, BFormInput, BFormSelect },
         plugins: [router]
       }
     });
@@ -21,9 +21,12 @@ describe('Dashboard storage', () => {
     (chrome.storage.local.get as jest.Mock).mockImplementationOnce((_k, cb) => cb({ JWT_TOKEN: 'tok' }));
     fetchMock.mockResponseOnce(JSON.stringify({ message: 'ok' }));
     wrapper.vm.apiKey = 'XYZ';
+    wrapper.vm.tipo = 'deepseek';
     await wrapper.vm.saveApiKey();
     await new Promise(process.nextTick);
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/me/api-key'), expect.any(Object));
+    const call = (fetchMock as any).mock.calls[0];
+    expect(call[0]).toContain('/me/api-key');
+    expect(JSON.parse(call[1].body).tipo).toBe('deepseek');
     expect((chrome.storage.local.set as jest.Mock).mock.calls[0][0]).toEqual({ API_TOKEN: 'XYZ' });
   });
 

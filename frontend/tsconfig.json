@@ -9,7 +9,8 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "types": ["bootstrap-vue-next", "jest", "chrome"],
-    "lib": ["dom", "esnext"]
+    "lib": ["dom", "esnext"],
+    "skipLibCheck": true
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules"]
