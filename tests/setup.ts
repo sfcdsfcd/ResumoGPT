@@ -4,7 +4,7 @@ fetchMock.enableMocks();
 
 beforeEach(() => {
   fetchMock.resetMocks();
-  (global as any).requestAnimationFrame = (cb: Function) => cb();
+  (global as any).requestAnimationFrame = (cb: Function) => setTimeout(cb, 0);
   (global as any).chrome = {
     storage: { local: { get: jest.fn(), set: jest.fn(), remove: jest.fn() } },
     runtime: {
