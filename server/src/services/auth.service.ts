@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import { injectable } from 'tsyringe'
 import User from '../models/user'
 import { env } from '../config/env'
+import { ApiKeyType } from '../types/apiKeyType'
 
 @injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
     email: string,
     password: string,
     apiKey?: string,
-    tipo: 'openai' | 'deepseek' = 'openai'
+    tipo: ApiKeyType = ApiKeyType.OPENAI
   ): Promise<void> {
     const hash = await bcrypt.hash(password, 10)
     await User.create({
@@ -43,7 +44,7 @@ export class AuthService {
   async updateApiKey(
     userId: number,
     apiKey: string,
-    tipo: 'openai' | 'deepseek'
+    tipo: ApiKeyType
   ): Promise<void> {
     const user = await User.findByPk(userId)
     if (!user) {
