@@ -1,6 +1,6 @@
 import vue from '@vitejs/plugin-vue'
-import { copyFileSync, cpSync, existsSync, mkdirSync, rmSync } from 'fs'
-import { resolve } from 'path'
+import { copyFileSync, cpSync, existsSync, rmSync } from 'fs'
+import { resolve, basename, extname } from 'path'
 import { defineConfig } from 'vite'
 
 const htmlInputs = {
@@ -14,6 +14,8 @@ export default defineConfig({
   plugins: [
     vue(),
     {
+      // Copies static files needed by the extension after Vite finishes
+      // the bundle step.
       name: 'copy-static',
       closeBundle() {
         copyFileSync(resolve(__dirname, 'public/manifest.json'),
@@ -24,7 +26,7 @@ export default defineConfig({
           resolve(__dirname, 'build/config.js'));
         copyFileSync(resolve(__dirname, 'public/sidebar.css'),
           resolve(__dirname, 'build/sidebar.css'));
-        // move processed html from public directory to build root
+        // move processed html from public directory to the build root
         const popupHtml = resolve(__dirname, 'build/public/popup.html');
         const dashboardHtml = resolve(__dirname, 'build/public/dashboard.html');
         const readyHtml = resolve(__dirname, 'build/public/ready.html');
@@ -37,23 +39,9 @@ export default defineConfig({
         if (existsSync(readyHtml)) {
           copyFileSync(readyHtml, resolve(__dirname, 'build/ready.html'));
         }
+        // clean up the temporary public folder created by Vite
         if (existsSync(resolve(__dirname, 'build/public')))
           rmSync(resolve(__dirname, 'build/public'), { recursive: true, force: true });
-
-        // Move arquivos que começam com _ para a pasta chunks/
-        const buildDir = resolve(__dirname, 'build');
-        const chunksDir = resolve(buildDir, 'chunks');
-        if (!existsSync(chunksDir)) mkdirSync(chunksDir);
-        const files = require('fs').readdirSync(buildDir);
-        files.forEach(file => {
-          if (file.startsWith('_')) {
-            const oldPath = resolve(buildDir, file);
-            const newPath = resolve(chunksDir, file);
-            if (existsSync(oldPath)) {
-              require('fs').renameSync(oldPath, newPath);
-            }
-          }
-        });
       }
     }
   ],
@@ -75,8 +63,25 @@ export default defineConfig({
       },
       output: {
         entryFileNames: '[name].js',
-        chunkFileNames: 'chunks/[name].js',
-        assetFileNames: '[name][extname]'
+        chunkFileNames: chunk => {
+          // Remove leading underscores from Rollup generated chunks so
+          // Chrome treats them as normal resources.
+          const name = chunk.name.replace(/^_/, '');
+          return `chunks/${name}.js`;
+        },
+        assetFileNames: asset => {
+          // Sanitize asset filenames to avoid the leading underscore that
+          // Chrome ignores when loading extension resources.
+          const ext = extname(asset.name ?? '');
+          const base = basename(asset.name ?? '', ext).replace(/^_/, '');
+          const filename = `${base}${ext}`;
+          // Assets originally named with '_' are placed inside the chunks
+          // directory so their references remain valid.
+          if (asset.name?.startsWith('_')) {
+            return `chunks/${filename}`;
+          }
+          return filename;
+        }
       }
     }
   }
