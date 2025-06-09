@@ -1,12 +1,20 @@
 import { shallowMount } from '@vue/test-utils';
 import Dashboard from '../src/dashboard/App.vue';
 import fetchMock from 'jest-fetch-mock';
+import { BCard, BButton, BFormInput } from 'bootstrap-vue-next';
+import { createMemoryHistory, createRouter } from 'vue-router';
 
 describe('Dashboard storage', () => {
   let wrapper: any;
   beforeEach(() => {
     (global as any).API_BASE_URL = 'http://localhost:3000/api';
-    wrapper = shallowMount(Dashboard);
+    const router = createRouter({ history: createMemoryHistory(), routes: [] });
+    wrapper = shallowMount(Dashboard, {
+      global: {
+        components: { BCard, BButton, BFormInput },
+        plugins: [router]
+      }
+    });
   });
 
   it('saves API_KEY to storage', async () => {

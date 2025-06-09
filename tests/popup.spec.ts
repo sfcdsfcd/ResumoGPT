@@ -1,12 +1,20 @@
 import { shallowMount } from '@vue/test-utils';
 import Popup from '../src/popup/App.vue';
 import fetchMock from 'jest-fetch-mock';
+import { BCard, BButton, BFormInput } from 'bootstrap-vue-next';
+import { createRouter, createMemoryHistory } from 'vue-router';
 
 describe('Popup authentication', () => {
   let wrapper: any;
   beforeEach(() => {
     (global as any).API_BASE_URL = 'http://localhost:3000/api';
-    wrapper = shallowMount(Popup);
+    const router = createRouter({ history: createMemoryHistory(), routes: [] });
+    wrapper = shallowMount(Popup, {
+      global: {
+        components: { BCard, BButton, BFormInput },
+        plugins: [router]
+      }
+    });
     Object.defineProperty(window, 'location', { value: { href: '' }, writable: true });
   });
 
