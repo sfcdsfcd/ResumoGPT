@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
+import { container, injectable } from 'tsyringe'
 import { AuthService } from '../services/auth.service'
 
+@injectable()
 export class AuthController {
   constructor(private service: AuthService) {}
 
@@ -64,4 +66,4 @@ export class AuthController {
   }
 }
 
-export const authController = new AuthController(new AuthService())
+export const authController = container.resolve(AuthController)
