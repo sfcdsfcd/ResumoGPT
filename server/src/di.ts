@@ -4,12 +4,10 @@ import { AuthService } from './services/auth.service'
 import { ResumoService } from './services/resumo.service'
 import { createOpenAIClient, OpenAIClientFactory } from './utils/openaiClient'
 
-export function setupDi(): void {
-  container.registerSingleton(AuthService)
-  container.registerSingleton(ResumoService)
-  container.register<OpenAIClientFactory>('OpenAIClientFactory', {
-    useValue: createOpenAIClient,
-  })
-}
+container.registerSingleton(AuthService)
+container.registerSingleton(ResumoService)
+container.register<OpenAIClientFactory>('OpenAIClientFactory', {
+  useValue: createOpenAIClient,
+})
 
 export { container }
