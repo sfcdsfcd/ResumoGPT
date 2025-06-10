@@ -4,9 +4,7 @@ import { resolve, basename, extname } from 'path'
 import { defineConfig } from 'vite'
 
 const htmlInputs = {
-  popup: resolve(__dirname, 'public/popup.html'),
-  dashboard: resolve(__dirname, 'public/dashboard.html'),
-  ready: resolve(__dirname, 'public/ready.html')
+  index: resolve(__dirname, 'public/index.html')
 };
 
 export default defineConfig({
@@ -27,17 +25,9 @@ export default defineConfig({
         copyFileSync(resolve(__dirname, 'public/sidebar.css'),
           resolve(__dirname, 'build/sidebar.css'));
         // move processed html from public directory to the build root
-        const popupHtml = resolve(__dirname, 'build/public/popup.html');
-        const dashboardHtml = resolve(__dirname, 'build/public/dashboard.html');
-        const readyHtml = resolve(__dirname, 'build/public/ready.html');
-        if (existsSync(popupHtml)) {
-          copyFileSync(popupHtml, resolve(__dirname, 'build/popup.html'));
-        }
-        if (existsSync(dashboardHtml)) {
-          copyFileSync(dashboardHtml, resolve(__dirname, 'build/dashboard.html'));
-        }
-        if (existsSync(readyHtml)) {
-          copyFileSync(readyHtml, resolve(__dirname, 'build/ready.html'));
+        const indexHtml = resolve(__dirname, 'build/public/index.html');
+        if (existsSync(indexHtml)) {
+          copyFileSync(indexHtml, resolve(__dirname, 'build/index.html'));
         }
         // clean up the temporary public folder created by Vite
         if (existsSync(resolve(__dirname, 'build/public')))

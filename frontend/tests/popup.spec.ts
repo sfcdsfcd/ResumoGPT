@@ -1,21 +1,30 @@
 import { shallowMount } from '@vue/test-utils';
-import Popup from '../src/popup/App.vue';
+import Login from '../src/pages/Login.vue';
 import fetchMock from 'jest-fetch-mock';
 import { BCard, BButton, BFormInput } from 'bootstrap-vue-next';
 import { createRouter, createMemoryHistory } from 'vue-router';
 
 describe('Popup authentication', () => {
   let wrapper: any;
-  beforeEach(() => {
+  let router: any;
+  beforeEach(async () => {
     (global as any).API_BASE_URL = 'http://localhost:3000/api';
-    const router = createRouter({ history: createMemoryHistory(), routes: [] });
-    wrapper = shallowMount(Popup, {
+    router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/login', component: Login },
+        { path: '/ready', component: {} },
+        { path: '/dashboard', component: {} }
+      ]
+    });
+    await router.push('/login');
+    await router.isReady();
+    wrapper = shallowMount(Login, {
       global: {
         components: { BCard, BButton, BFormInput },
         plugins: [router]
       }
     });
-    Object.defineProperty(window, 'location', { value: { href: '' }, writable: true });
   });
 
   it('saves JWT token on login', async () => {
@@ -26,15 +35,17 @@ describe('Popup authentication', () => {
     expect((chrome.storage.local.set as jest.Mock).mock.calls[0][0]).toEqual({ JWT_TOKEN: 'abc' });
   });
 
-  it('redirects to ready.html when apiKey exists', async () => {
+  it('redirects to /ready when apiKey exists', async () => {
     fetchMock.mockResponseOnce(JSON.stringify({ api_key: 'key' }), { status: 200 });
     await wrapper.vm.verifyApiKeyAndRedirect('tkn');
-    expect(window.location.href).toContain('ready.html');
+    await new Promise(process.nextTick);
+    expect(router.currentRoute.value.path).toBe('/ready');
   });
 
-  it('redirects to dashboard when apiKey missing', async () => {
+  it('redirects to /dashboard when apiKey missing', async () => {
     fetchMock.mockResponseOnce(JSON.stringify({}), { status: 200 });
     await wrapper.vm.verifyApiKeyAndRedirect('tkn');
-    expect(window.location.href).toContain('dashboard.html');
+    await new Promise(process.nextTick);
+    expect(router.currentRoute.value.path).toBe('/dashboard');
   });
 });

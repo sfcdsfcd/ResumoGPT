@@ -1,57 +1,20 @@
 <template>
   <div class="popup-wrapper d-flex align-items-center justify-content-center">
     <b-card class="auth-card shadow-sm">
-      <h2 class="text-center mb-4">{{ isLogin ? 'Login' : 'Cadastre-se' }}</h2>
-      <b-form-input
-        v-if="isLogin"
-        v-model="loginEmail"
-        type="email"
-        placeholder="Email"
-        class="mb-3"
-      />
-      <b-form-input
-        v-if="isLogin"
-        v-model="loginPassword"
-        type="password"
-        placeholder="Senha"
-        class="mb-3"
-      />
-      <b-form-input
-        v-if="!isLogin"
-        v-model="registerUsername"
-        placeholder="Usuário"
-        class="mb-3"
-      />
-      <b-form-input
-        v-if="!isLogin"
-        v-model="registerEmail"
-        type="email"
-        placeholder="Email"
-        class="mb-3"
-      />
-      <b-form-input
-        v-if="!isLogin"
-        v-model="registerPassword"
-        type="password"
-        placeholder="Senha"
-        class="mb-3"
-      />
+      <h2 class="text-center mb-4">Login</h2>
+      <b-form-input v-model="loginEmail" type="email" placeholder="Email" class="mb-3" />
+      <b-form-input v-model="loginPassword" type="password" placeholder="Senha" class="mb-3" />
       <div class="d-flex justify-content-between mb-3">
-        <b-button variant="primary" @click="isLogin ? login() : register()">
-          <i class="bi" :class="isLogin ? 'bi-box-arrow-in-right' : 'bi-person-check'" />
-          <span class="ms-1">{{ isLogin ? 'Login' : 'Registrar' }}</span>
+        <b-button variant="primary" @click="login">
+          <i class="bi bi-box-arrow-in-right" />
+          <span class="ms-1">Login</span>
         </b-button>
-        <b-button variant="secondary" @click="toggleForm">
-          <i class="bi" :class="isLogin ? 'bi-person-plus' : 'bi-arrow-left'" />
-          <span class="ms-1">{{ isLogin ? 'Cadastre-se' : 'Voltar' }}</span>
+        <b-button variant="secondary" @click="router.push('/register')">
+          <i class="bi bi-person-plus" />
+          <span class="ms-1">Cadastre-se</span>
         </b-button>
       </div>
-      <b-button
-        v-if="loginSuccess"
-        variant="success"
-        class="w-100"
-        @click="openDashboard"
-      >
+      <b-button v-if="loginSuccess" variant="success" class="w-100" @click="openDashboard">
         Abrir Dashboard
       </b-button>
       <div v-if="message" :class="messageType" class="mt-3 text-center">{{ message }}</div>
@@ -67,13 +30,8 @@ const API_BASE_URL = (window as any).API_BASE_URL
 
 const loginEmail = ref('')
 const loginPassword = ref('')
-const registerUsername = ref('')
-const registerEmail = ref('')
-const registerPassword = ref('')
-
 const message = ref('')
 const messageType = ref('')
-const isLogin = ref(true)
 const loginSuccess = ref(false)
 const router = useRouter()
 
@@ -82,14 +40,10 @@ function showMessage(msg: string, success = false) {
   messageType.value = success ? 'success' : 'error'
 }
 
-function toggleForm() {
-  isLogin.value = !isLogin.value
+function openDashboard() {
+  router.push('/dashboard')
 }
 
-function openDashboard() {
-  chrome.tabs.create({ url: chrome.runtime.getURL('dashboard.html') })
-  window.close()
-}
 async function verifyApiKeyAndRedirect(token: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/me`, {
@@ -105,15 +59,16 @@ async function verifyApiKeyAndRedirect(token: string) {
     const user = await res.json()
     const key = user?.api_key || user?.apiKey
     if (key) {
-      location.href = chrome.runtime.getURL('ready.html')
+      router.push('/ready')
     } else {
-      location.href = chrome.runtime.getURL('dashboard.html')
+      router.push('/dashboard')
     }
   } catch (err) {
     console.error('Falha ao verificar apiKey', err)
     showMessage('Erro ao verificar apiKey')
   }
 }
+
 function checkAuth() {
   chrome.storage.local.get('JWT_TOKEN', async (result) => {
     const token = result.JWT_TOKEN
@@ -121,6 +76,7 @@ function checkAuth() {
     await verifyApiKeyAndRedirect(token)
   })
 }
+
 onMounted(() => {
   checkAuth()
 })
@@ -148,33 +104,6 @@ async function login() {
     showMessage('Login failed')
   }
 }
-
-async function register() {
-  try {
-    const r = await fetch(`${API_BASE_URL}/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      mode: 'cors',
-      body: JSON.stringify({
-        username: registerUsername.value,
-        email: registerEmail.value,
-        password: registerPassword.value
-      })
-    })
-    const data = await r.json()
-    if (data.token) {
-      chrome.storage.local.set({ JWT_TOKEN: data.token }, async () => {
-        await verifyApiKeyAndRedirect(data.token)
-      })
-    } else if (data.message) {
-      showMessage(data.message, true)
-    } else {
-      showMessage(data.error || 'Register failed')
-    }
-  } catch {
-    showMessage('Register failed')
-  }
-}
 </script>
 
 <style scoped lang="scss">
@@ -188,3 +117,4 @@ async function register() {
   border-radius: 0.75rem;
 }
 </style>
+
