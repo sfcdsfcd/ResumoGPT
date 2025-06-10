@@ -6,10 +6,10 @@ export type OpenAIClientFactory = (
   tipo: ApiKeyType
 ) => OpenAI
 
-export const createOpenAIClient: OpenAIClientFactory = (
-  apiKey,
-  tipo = ApiKeyType.OPENAI
-) => {
+export function createOpenAIClient(
+  apiKey: string,
+  tipo: ApiKeyType = ApiKeyType.OPENAI
+): OpenAI {
   return new OpenAI({
     apiKey,
     baseURL:
@@ -18,3 +18,5 @@ export const createOpenAIClient: OpenAIClientFactory = (
         : 'https://api.openai.com'
   })
 }
+
+export const openAIClientFactory: OpenAIClientFactory = createOpenAIClient
