@@ -10,10 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-const router = useRouter()
 function irParaDashboard() {
-  router.push('/dashboard')
+  window.location.href = 'dashboard.html'
 }
 </script>
 
