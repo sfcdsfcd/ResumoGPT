@@ -1,17 +1,21 @@
 'use strict'
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.sequelize.query("CREATE TYPE IF NOT EXISTS api_key_type_enum AS ENUM ('openai','deepseek')")
+  // Umzug passes the QueryInterface instance via the `context` option.
+  // Destructure it to access Sequelize helpers like `addColumn`.
+  up: async ({ context: queryInterface, Sequelize }) => {
     await queryInterface.addColumn('users', 'api_key_type', {
       type: Sequelize.ENUM('openai', 'deepseek'),
       allowNull: false,
-      defaultValue: 'openai'
+      defaultValue: 'openai',
     })
   },
 
-  down: async (queryInterface) => {
+  down: async ({ context: queryInterface }) => {
     await queryInterface.removeColumn('users', 'api_key_type')
-    await queryInterface.sequelize.query('DROP TYPE IF EXISTS api_key_type_enum')
-  }
+    // Enum types are not dropped automatically when removing the column.
+    await queryInterface.sequelize.query(
+      'DROP TYPE IF EXISTS "enum_users_api_key_type"'
+    )
+  },
 }

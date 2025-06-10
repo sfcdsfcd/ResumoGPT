@@ -93,3 +93,22 @@ inspection port and run the server with the `debug` script.
 
 3. Attach your debugger (e.g. Chrome DevTools or VS Code) to
    `localhost:9229` and set breakpoints normally.
+
+## Migrations
+
+The backend runs Sequelize migrations automatically at startup using [Umzug](https://github.com/sequelize/umzug). The Umzug instance passes `sequelize.getQueryInterface()` as the `context` so each migration receives the `QueryInterface` via destructuring:
+
+```js
+module.exports = {
+  up: async ({ context: queryInterface }) => {
+    // migration logic
+  },
+  down: async ({ context: queryInterface }) => {
+    // rollback logic
+  }
+}
+```
+
+This differs from the `sequelize-cli` format which passes `(queryInterface, Sequelize)` as separate parameters. When executed programmatically via Umzug (v3 or higher) you must use the `context` object.
+
+To apply migrations on startup set `APPLY_MIGRATIONS=true` in `server/.env`.
