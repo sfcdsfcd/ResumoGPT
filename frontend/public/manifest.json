@@ -11,7 +11,7 @@
   },
   "action": {
     "default_title": "Resumogpt",
-    "default_popup": "popup.html"
+    "default_popup": "index.html"
   },
   "background": {
     "service_worker": "background.js",
@@ -29,12 +29,9 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "popup.html",
-        "popup.js",
-        "dashboard.html",
-        "dashboard.js",
+        "index.html",
+        "index.js",
         "contentScript.js",
-        "ready.html",
         "sidebar.css"
       ],
       "matches": ["<all_urls>"]

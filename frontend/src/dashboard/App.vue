@@ -37,7 +37,7 @@ onMounted(() => {
   chrome.storage.local.get('JWT_TOKEN', data => {
     const token = data.JWT_TOKEN
     if (!token) {
-      router.push('/popup.html')
+      router.push('/login')
       return
     }
     info.value = 'Logged in'
@@ -55,7 +55,7 @@ onMounted(() => {
 
 function logout() {
   chrome.storage.local.remove('JWT_TOKEN', () => {
-    router.push('/popup.html')
+    router.push('/login')
   })
 }
 
