@@ -4,11 +4,12 @@
       <h1>Dashboard</h1>
       <div id="info">{{ info }}</div>
       <b-form-input v-model="apiKey" id="api-key" type="text" placeholder="API Key" class="mb-3" />
-      <b-form-select v-model="tipo" class="mb-3">
-        <b-form-select-option value="openai">OpenAI (ChatGPT)</b-form-select-option>
-        <b-form-select-option value="deepseek">DeepSeek</b-form-select-option>
+      <b-form-select v-model="apiKeyType" :options="apiKeyOptions" class="mb-3">
+        <template #first>
+          <b-form-select-option value="" disabled>Selecione o tipo da API</b-form-select-option>
+        </template>
       </b-form-select>
-      <small class="text-muted d-block mb-2">DeepSeek usa a mesma API do OpenAI porém com outra base URL.</small>
+      <small v-if="apiKeyType === 'deepseek'" class="text-muted text-sm mt-1">DeepSeek usa a mesma API do OpenAI porém com outra base URL.</small>
       <div class="d-flex justify-content-between mb-3">
         <b-button id="save-api-key" variant="primary" @click="saveApiKey">Salvar API Key</b-button>
         <b-button id="logout" variant="danger" @click="logout">Logout</b-button>
@@ -24,7 +25,11 @@ import { useRouter } from 'vue-router'
 
 const info = ref('')
 const apiKey = ref('')
-const tipo = ref<'openai' | 'deepseek'>('openai')
+const apiKeyType = ref<'openai' | 'deepseek' | ''>('')
+const apiKeyOptions = [
+  { value: 'openai', text: 'OpenAI (ChatGPT)' },
+  { value: 'deepseek', text: 'DeepSeek' }
+]
 const apiMessage = ref('')
 const router = useRouter()
 
@@ -43,7 +48,7 @@ onMounted(() => {
       .then(r => r.json())
       .then(u => {
         if (u.api_key) apiKey.value = u.api_key
-        if (u.tipoApiKey) tipo.value = u.tipoApiKey
+        if (u.tipoApiKey) apiKeyType.value = u.tipoApiKey
       })
   })
 })
@@ -67,7 +72,7 @@ function saveApiKey() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ apiKey: apiKey.value, tipo: tipo.value })
+      body: JSON.stringify({ apiKey: apiKey.value, tipo: apiKeyType.value })
     })
       .then(r => r.json())
       .then(res => {

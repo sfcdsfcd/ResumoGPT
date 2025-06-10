@@ -21,7 +21,7 @@ describe('Dashboard storage', () => {
     (chrome.storage.local.get as jest.Mock).mockImplementationOnce((_k, cb) => cb({ JWT_TOKEN: 'tok' }));
     fetchMock.mockResponseOnce(JSON.stringify({ message: 'ok' }));
     wrapper.vm.apiKey = 'XYZ';
-    wrapper.vm.tipo = 'deepseek';
+    wrapper.vm.apiKeyType = 'deepseek';
     await wrapper.vm.saveApiKey();
     await new Promise(process.nextTick);
     const call = (fetchMock as any).mock.calls[0];
