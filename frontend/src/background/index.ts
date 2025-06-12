@@ -4,7 +4,7 @@ const API_BASE_URL = isDevelopment
   : 'https://your-production-url.com';
 
 
-async function summarize(text: string): Promise<string> {
+async function summarize(text: string): Promise<{ resumo: string; tipoUsado: string }> {
   try {
     const token: string = await new Promise((resolve) => {
       chrome.storage.local.get('JWT_TOKEN', (result) => {
@@ -23,15 +23,24 @@ async function summarize(text: string): Promise<string> {
 
     if (!response.ok) {
       console.error(`Erro na API: ${response.status} ${response.statusText}`);
-      return 'Erro ao conectar à API.';
+      return { resumo: 'Erro ao conectar à API.', tipoUsado: '' };
     }
 
     const json = await response.json();
-    return json.resumo || json.summary || 'Erro ao resumir.';
+    return { resumo: json.resumo || json.summary || 'Erro ao resumir.', tipoUsado: json.tipoUsado };
   } catch (err) {
     console.error(err);
-    return 'Erro ao conectar à API.';
+    return { resumo: 'Erro ao conectar à API.', tipoUsado: '' };
   }
+}
+
+function addToHistory(original: string, resumo: string, url: string) {
+  chrome.storage.local.get('SUMMARY_HISTORY', data => {
+    const history = Array.isArray(data.SUMMARY_HISTORY) ? data.SUMMARY_HISTORY : []
+    history.unshift({ original, resumo, url, timestamp: Date.now() })
+    if (history.length > 5) history.splice(5)
+    chrome.storage.local.set({ SUMMARY_HISTORY: history })
+  })
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -80,9 +89,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'resumir' && info.selectionText && tab?.id) {
     const ok = await ensureContentScript(tab.id);
     if (!ok) return;
-    const resumo = await summarize(info.selectionText);
-    chrome.tabs.sendMessage(tab.id, { action: 'SHOW_SUMMARY', summary: resumo });
+    const result = await summarize(info.selectionText);
+    chrome.tabs.sendMessage(tab.id, { action: 'SHOW_SUMMARY', summary: result.resumo, tipo: result.tipoUsado });
+    addToHistory(info.selectionText, result.resumo, tab.url || '');
   }
 });
 
-export { summarize };
+export { summarize, addToHistory };

@@ -18,12 +18,12 @@ export class ResumoController {
       if (!user || !(user as any).api_key) {
         return res.status(400).json({ error: 'API key not configured' })
       }
-      const resumo = await this.service.gerarResumo(
+      const { resumo, tipoUsado } = await this.service.gerarResumo(
         text,
         (user as any).api_key,
         (user as any).api_key_type || ApiKeyType.OPENAI
       )
-      res.json({ resumo })
+      res.json({ resumo, tipoUsado })
     } catch (err) {
       next(err)
     }

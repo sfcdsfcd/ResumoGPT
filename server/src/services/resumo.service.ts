@@ -9,10 +9,10 @@ export class ResumoService {
     @inject('OpenAIClientFactory') private readonly createClient: OpenAIClientFactory
   ) {}
 
-  async gerarResumo(
+  private async gerarComTipo(
     texto: string,
     apiKey: string,
-    tipo: ApiKeyType = ApiKeyType.OPENAI
+    tipo: ApiKeyType
   ): Promise<string> {
     const client = this.createClient(apiKey, tipo)
     const completion = await client.chat.completions.create({
@@ -23,5 +23,27 @@ export class ResumoService {
       ],
     })
     return completion.choices[0]?.message?.content?.trim() || ''
+  }
+
+  async gerarResumo(
+    texto: string,
+    apiKey: string,
+    tipo: ApiKeyType = ApiKeyType.OPENAI
+  ): Promise<{ resumo: string; tipoUsado: ApiKeyType }> {
+    const ordem =
+      tipo === ApiKeyType.OPENAI
+        ? [ApiKeyType.OPENAI, ApiKeyType.DEEPSEEK]
+        : [ApiKeyType.DEEPSEEK, ApiKeyType.OPENAI]
+
+    let lastError: any
+    for (const t of ordem) {
+      try {
+        const resumo = await this.gerarComTipo(texto, apiKey, t)
+        return { resumo, tipoUsado: t }
+      } catch (err) {
+        lastError = err
+      }
+    }
+    throw lastError
   }
 }

@@ -3,6 +3,7 @@ import Login from '../pages/Login.vue'
 import Register from '../pages/Register.vue'
 import Dashboard from '../dashboard/App.vue'
 import Ready from '../ready/App.vue'
+import History from '../history/App.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -11,6 +12,7 @@ const router = createRouter({
     { path: '/register', component: Register },
     { path: '/dashboard', component: Dashboard },
     { path: '/ready', component: Ready },
+    { path: '/history', component: History },
     { path: '/', redirect: '/login' }
   ]
 })

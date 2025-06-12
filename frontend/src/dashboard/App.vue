@@ -12,6 +12,7 @@
       <small v-if="apiKeyType === 'deepseek'" class="text-muted text-sm mt-1">DeepSeek usa a mesma API do OpenAI porém com outra base URL.</small>
       <div class="d-flex justify-content-between mb-3">
         <b-button id="save-api-key" variant="primary" @click="saveApiKey">Salvar API Key</b-button>
+        <b-button variant="secondary" @click="router.push('/history')">Histórico</b-button>
         <b-button id="logout" variant="danger" @click="logout">Logout</b-button>
       </div>
       <div id="api-message" class="success" v-if="apiMessage">{{ apiMessage }}</div>
