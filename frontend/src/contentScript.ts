@@ -114,7 +114,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
           chrome.storage.local.get('SUMMARY_HISTORY', d => {
             const history = Array.isArray(d.SUMMARY_HISTORY) ? d.SUMMARY_HISTORY : []
             history.unshift({ original: text, resumo: summary, url: window.location.href, timestamp: Date.now() })
-            if (history.length > 5) history.splice(5)
+            if (history.length > MAX_HISTORY_ITEMS) history.splice(MAX_HISTORY_ITEMS)
             chrome.storage.local.set({ SUMMARY_HISTORY: history })
           })
         })
