@@ -1,10 +1,12 @@
+import { addToHistory } from '../history/store';
+
 const isDevelopment = !('update_url' in chrome.runtime.getManifest());
 const API_BASE_URL = isDevelopment
   ? 'http://localhost:3000/api'
   : 'https://your-production-url.com';
 
 
-async function summarize(text: string): Promise<string> {
+async function summarize(text: string): Promise<{ resumo: string; tipoUsado: string }> {
   try {
     const token: string = await new Promise((resolve) => {
       chrome.storage.local.get('JWT_TOKEN', (result) => {
@@ -23,16 +25,17 @@ async function summarize(text: string): Promise<string> {
 
     if (!response.ok) {
       console.error(`Erro na API: ${response.status} ${response.statusText}`);
-      return 'Erro ao conectar à API.';
+      return { resumo: 'Erro ao conectar à API.', tipoUsado: '' };
     }
 
     const json = await response.json();
-    return json.resumo || json.summary || 'Erro ao resumir.';
+    return { resumo: json.resumo || json.summary || 'Erro ao resumir.', tipoUsado: json.tipoUsado };
   } catch (err) {
     console.error(err);
-    return 'Erro ao conectar à API.';
+    return { resumo: 'Erro ao conectar à API.', tipoUsado: '' };
   }
 }
+
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
@@ -80,9 +83,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'resumir' && info.selectionText && tab?.id) {
     const ok = await ensureContentScript(tab.id);
     if (!ok) return;
-    const resumo = await summarize(info.selectionText);
-    chrome.tabs.sendMessage(tab.id, { action: 'SHOW_SUMMARY', summary: resumo });
+    const result = await summarize(info.selectionText);
+    chrome.tabs.sendMessage(tab.id, { action: 'SHOW_SUMMARY', summary: result.resumo, tipo: result.tipoUsado });
+    addToHistory(info.selectionText, result.resumo, tab.url || '');
   }
 });
 
-export { summarize };
+export { summarize, addToHistory };

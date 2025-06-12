@@ -1,3 +1,5 @@
+import { addToHistory } from './history/store';
+
 const injectedFlag = '__resumogpt_sidebar_injected';
 const listenerFlag = '__resumogpt_listener_registered';
 const cssFlag = '__resumogpt_css_inserted';
@@ -111,6 +113,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
           const summary = data.summary || data.error || 'Falha ao resumir.';
           box.content.textContent = summary;
           chrome.storage.local.set({ PAGE_SUMMARY: summary });
+          addToHistory(text, summary, window.location.href)
         })
         .catch(() => {
           box.content.textContent = 'Erro ao conectar à API.';
@@ -121,10 +124,11 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   }
 
   if (msg.action === 'SHOW_SUMMARY' && typeof msg.summary === 'string') {
-    const box = createSidebar(msg.summary);
+    const text = msg.tipo ? `${msg.summary}\n(IA: ${msg.tipo})` : msg.summary
+    const box = createSidebar(text);
     if (!box) {
       const existing = document.querySelector<HTMLDivElement>('#resumogpt-sidebar .content');
-      if (existing) existing.textContent = msg.summary;
+      if (existing) existing.textContent = text;
     }
     sendResponse?.({status: 'shown'});
   }
