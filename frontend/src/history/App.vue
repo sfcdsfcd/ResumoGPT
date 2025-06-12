@@ -19,19 +19,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-interface Item {
-  original: string
-  resumo: string
-  url: string
-  timestamp: number
-}
-const items = ref<Item[]>([])
+import { loadHistory, SummaryItem } from './store'
+const items = ref<SummaryItem[]>([])
 const router = useRouter()
 
 onMounted(() => {
-  chrome.storage.local.get('SUMMARY_HISTORY', data => {
-    items.value = data.SUMMARY_HISTORY || []
-  })
+  loadHistory(h => (items.value = h))
 })
 function voltar() {
   router.back()

@@ -1,3 +1,5 @@
+import { addToHistory } from './history/store';
+
 const injectedFlag = '__resumogpt_sidebar_injected';
 const listenerFlag = '__resumogpt_listener_registered';
 const cssFlag = '__resumogpt_css_inserted';
@@ -111,12 +113,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
           const summary = data.summary || data.error || 'Falha ao resumir.';
           box.content.textContent = summary;
           chrome.storage.local.set({ PAGE_SUMMARY: summary });
-          chrome.storage.local.get('SUMMARY_HISTORY', d => {
-            const history = Array.isArray(d.SUMMARY_HISTORY) ? d.SUMMARY_HISTORY : []
-            history.unshift({ original: text, resumo: summary, url: window.location.href, timestamp: Date.now() })
-            if (history.length > MAX_HISTORY_ITEMS) history.splice(MAX_HISTORY_ITEMS)
-            chrome.storage.local.set({ SUMMARY_HISTORY: history })
-          })
+          addToHistory(text, summary, window.location.href)
         })
         .catch(() => {
           box.content.textContent = 'Erro ao conectar à API.';

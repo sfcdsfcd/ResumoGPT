@@ -1,3 +1,5 @@
+import { addToHistory } from '../history/store';
+
 const isDevelopment = !('update_url' in chrome.runtime.getManifest());
 const API_BASE_URL = isDevelopment
   ? 'http://localhost:3000/api'
@@ -34,14 +36,6 @@ async function summarize(text: string): Promise<{ resumo: string; tipoUsado: str
   }
 }
 
-function addToHistory(original: string, resumo: string, url: string) {
-  chrome.storage.local.get('SUMMARY_HISTORY', data => {
-    const history = Array.isArray(data.SUMMARY_HISTORY) ? data.SUMMARY_HISTORY : []
-    history.unshift({ original, resumo, url, timestamp: Date.now() })
-    if (history.length > 5) history.splice(5)
-    chrome.storage.local.set({ SUMMARY_HISTORY: history })
-  })
-}
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
