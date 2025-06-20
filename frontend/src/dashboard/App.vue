@@ -1,6 +1,6 @@
 <template>
-  <div class="popup-wrapper container mx-auto text-center p-3">
-    <b-card>
+  <div class="popup-wrapper text-center p-3">
+    <b-card class="dashboard-card">
       <h1>Dashboard</h1>
       <div id="info">{{ info }}</div>
       <b-form-input v-model="apiKey" id="api-key" type="text" placeholder="API Key" class="mb-3" />
@@ -91,12 +91,3 @@ function saveApiKey() {
   });
 }
 </script>
-<style scoped>
-.popup-wrapper {
-  min-width: 300px;
-  max-width: 400px;
-  width: 100%;
-  max-height: 600px;
-  overflow-y: auto;
-}
-</style>

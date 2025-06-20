@@ -1,6 +1,6 @@
 <template>
-  <div class="ready-wrapper container mx-auto d-flex align-items-center justify-content-center">
-    <b-card class="text-center">
+  <div class="popup-wrapper ready-wrapper">
+    <b-card class="text-center dashboard-card">
       <h2>Pronto! Agora é só resumir as coisas 😎</h2>
       <b-button variant="outline-primary" class="mt-3" @click="irParaDashboard">
         Alterar API Key
@@ -20,8 +20,6 @@ function irParaDashboard() {
 
 <style scoped>
 .ready-wrapper {
-  max-width: 400px;
-  margin: auto;
   animation: fadeIn 0.5s ease;
 }
 @keyframes fadeIn {

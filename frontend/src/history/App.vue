@@ -1,6 +1,6 @@
 <template>
-  <div class="history-wrapper container mx-auto">
-    <b-card>
+  <div class="popup-wrapper history-wrapper">
+    <b-card class="dashboard-card">
       <h2>Histórico de Resumos</h2>
       <div v-if="items.length === 0">Nenhum resumo salvo</div>
       <div v-for="it in items" :key="it.timestamp" class="mb-3">
@@ -32,8 +32,6 @@ function voltar() {
 </script>
 <style scoped>
 .history-wrapper {
-  max-width: 400px;
-  margin: auto;
   max-height: 600px;
   overflow-y: auto;
 }
