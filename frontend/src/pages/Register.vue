@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-wrapper d-flex align-items-center justify-content-center">
+  <div class="popup-wrapper">
     <b-card class="auth-card shadow-sm">
       <h2 class="text-center mb-4">Cadastre-se</h2>
       <b-form-input v-model="registerUsername" placeholder="Usuário" class="mb-3" />
@@ -92,11 +92,6 @@ async function registerUser() {
 
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-.popup-wrapper {
-  width: 360px;
-  margin: 0 auto;
-  font-family: 'Roboto', 'Open Sans', sans-serif;
-}
 .auth-card {
   border-radius: 0.75rem;
 }
